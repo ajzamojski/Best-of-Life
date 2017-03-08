@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Best of Life</title>
+
+	<link rel="stylesheet" type="text/css" href="assets/css/style.css">
+	<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+	<script src="http://code.jquery.com/jquery-2.1.3.min.js"></script>
+	<script type="text/javascript" src="assets/javascript/app.js"></script>
+
+</head>
+<body>
+
+	<div class="jumbotron">
+	  <div class="container">
+	    <h1>Best of Life</h1>
+	  </div>
+	</div>
+
+	<div class="container">
+		<div class="row">
+			<div class="col-xs-12 col-md-5">
+				<label for="search-input">Search Topic:</label>
+                <input class="form-control" placeholder="Enter Topic" id="searchInput" type="text">
+			</div>
+			<div class="col-xs-12 col-md-5">
+				<label for="search-input">Location</label>
+                <input class="form-control" placeholder="zipcode" id="locationInput" onkeypress='return event.charCode >= 48 && event.charCode <= 57'>
+			</div>
+			<div class="col-xs-6 col-md-2">
+				<button class="btn btn-default" id="submitTopic" type="submit">Submit</button>
+			</div>
+		</div>
+	</div>
+
+
+
+
+
+</body>
+</html>
