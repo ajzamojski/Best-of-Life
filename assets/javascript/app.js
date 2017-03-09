@@ -5,6 +5,7 @@ $(document).ready(function(){
 	var coordinates = "";
 	var chosenLat = "";
 	var chosenLng = "";
+	var listResults;
 
 	$("#submitTopic").on('click', function(event){
 		event.preventDefault();
@@ -30,14 +31,14 @@ $(document).ready(function(){
 				}).done (function(response){
 				console.log(response);
 
-				var longitude = response.results[0].geometry.location.lng;
-				console.log(longitude);
-				var latitude = response.results[0].geometry.location.lat;
-				console.log(latitude);
+				var longitudeFirst = response.results[0].geometry.location.lng;
+				console.log(longitudeFirst);
+				var latitudeFirst = response.results[0].geometry.location.lat;
+				console.log(latitudeFirst);
 
-					coordinates = "&location=" + latitude + "," + longitude;
+					coordinates = "&location=" + latitudeFirst + "," + longitudeFirst;
 
-				initMap2(latitude, longitude);
+				// initMap2(latitude, longitude);
 
 				console.log(topic);
 
@@ -53,6 +54,8 @@ $(document).ready(function(){
 
 					chosenLat = finalResponse.results[0].geometry.location.lat;
 					chosenLng = finalResponse.results[0].geometry.location.lng;
+					listResults = finalResponse.results;
+					// console.log(listResults);
 
 					initMap2(chosenLat, chosenLng);
 
@@ -62,7 +65,9 @@ $(document).ready(function(){
 		console.log("hello");
 	};
 
+
 	function initMap2(latitude, longitude) {
+		// console.log(longitude);
 	  var uluru = {lat: latitude, lng: longitude};
 	  var map = new google.maps.Map(document.getElementById('map'), {
 	    zoom: 15,
@@ -73,6 +78,24 @@ $(document).ready(function(){
 	    map: map
 	  });
 	};
+
+	// function initMap2(listResults) {
+	// 	console.log(listResults);
+	// 	var latitude1 = listResults[0].geometry.location.lat;
+	// 	console.log(latitude1);
+	// 	var longitude1 = listResults[1].geometry.location.lng;
+	// 	console.log(longitude1);
+	// 	// console.log(longitude);
+	//   var uluru = {lat: latitude1, lng: longitude1};
+	//   var map = new google.maps.Map(document.getElementById('map'), {
+	//     zoom: 15,
+	//     center: uluru
+	//   });
+	//   var marker = new google.maps.Marker({
+	//     position: uluru,
+	//     map: map
+	//   });
+	// };
 
 });
 function initMap(latitude, longitude) {
