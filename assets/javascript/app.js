@@ -7,6 +7,12 @@ $(document).ready(function(){
 	var chosenLng = "";
 	var listResults;
 
+	// Triggers modal for instructions
+	$("#myBtn").click(function(){
+        $("#myModal").modal();
+    });
+
+
 	$("#submitTopic").on('click', function(event){
 		event.preventDefault();
 
