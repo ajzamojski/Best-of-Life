@@ -1,5 +1,5 @@
 $(document).ready(function(){
-
+	$("#googleMap").hide();
 	var googleAPI = "AIzaSyDr-DLJtSliHGOsZhoI76ETn6jsk8kVYGo";
 	var topic = "";
 	var coordinates = "";
@@ -12,9 +12,9 @@ $(document).ready(function(){
         $("#myModal").modal();
     });
 
-
 	$("#submitTopic").on('click', function(event){
 		event.preventDefault();
+		$("#googleMap").show();
 
 		topic = $("#searchInput").val().trim();
 		var location = $("#locationInput").val().trim();
