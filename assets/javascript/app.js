@@ -93,7 +93,7 @@ $(document).ready(function()
 
 		var queryURL = YELP_HEROKU_ENDPOINT + "?term=" + searchTerm + "&location="+ place + "&radius="+ radiusToMeters(radius);
 	
-	console.log("queryURL: " + queryURL);
+		console.log("queryURL: " + queryURL);
 
 		$.ajax({
 		      url: queryURL,
@@ -104,12 +104,14 @@ $(document).ready(function()
 
 	    	//contains object data of first element 'best' in response.businesses
 	    	var best = yelpBusinessesArray[0];
+	    	var secondBest = yelpBusinessesArray[1];
+	    	var thirdBest = yelpBusinessesArray[2];
 
 	    	if(!geoFlag)
 	    	{
 	    		drawMap(best.coordinates.latitude, best.coordinates.longitude, radius); 
 	    	}
-	    	addMarker(best, searchTerm);
+	    	addMarker(best, secondBest, thirdBest, searchTerm);
 
 	    });
 	}//END queryYelp()
@@ -211,10 +213,12 @@ function revGeoCode()
 //=============================================================================
 
 
-function addMarker(bestData, searchTerm)
+function addMarker(bestData, secondBest, thirdBest, searchTerm)
 {
 	
 	var uluru = {lat: bestData.coordinates.latitude, lng: bestData.coordinates.longitude};
+	var uluru2 = {lat: secondBest.coordinates.latitude, lng: secondBest.coordinates.longitude};
+	var uluru3 = {lat: thirdBest.coordinates.latitude, lng: thirdBest.coordinates.longitude};
 
 	var marker = new google.maps.Marker({
 	    
@@ -226,6 +230,18 @@ function addMarker(bestData, searchTerm)
 	    //icon:'assets/images/ribbon-sm.png',
 	    //animation:google.maps.Animation.BOUNCE
 	});//END marker
+	var marker2 = new google.maps.Marker({
+	    
+	    position: uluru2,
+	    map: map
+
+	});
+	var marker3 = new google.maps.Marker({
+	    
+	    position: uluru3,
+	    map: map
+
+	});
 
 
  
@@ -243,14 +259,57 @@ function addMarker(bestData, searchTerm)
 	   			"</p>" +
 	   		"</address>"+	
 		"</div>";
-     
-        
+
+	var infoWindowData2 = 
+    	"<div class='infoWindow'>"+
+	    	"<h1 class='infoHeading'>THE Second Best "  + searchTerm.toUpperCase() + "</h1>" +
+	    	"<br>" +
+	    	"<address class='infoAddress'>" +
+	     		"<h3 class='infoName'>" + secondBest.name + "</h3>"+
+	     		secondBest.location.display_address[0] + "<br>" +
+	    		secondBest.location.display_address[1] + "<br>" +
+	     		secondBest.display_phone + "</p>" +   	    		
+	   			"<p>" + 
+	   				"<a href=" + secondBest.url + ">" + "Visit On Yelp</a>" + 
+	   			"</p>" +
+	   		"</address>"+	
+		"</div>";
+
+	var infoWindowData3 = 
+    	"<div class='infoWindow'>"+
+	    	"<h1 class='infoHeading'>THE Third Best "  + searchTerm.toUpperCase() + "</h1>" +
+	    	"<br>" +
+	    	"<address class='infoAddress'>" +
+	     		"<h3 class='infoName'>" + thirdBest.name + "</h3>"+
+	     		thirdBest.location.display_address[0] + "<br>" +
+	    		thirdBest.location.display_address[1] + "<br>" +
+	     		thirdBest.display_phone + "</p>" +   	    		
+	   			"<p>" + 
+	   				"<a href=" + thirdBest.url + ">" + "Visit On Yelp</a>" + 
+	   			"</p>" +
+	   		"</address>"+	
+		"</div>";
+
     var infowindow = new google.maps.InfoWindow({content: infoWindowData});
 
-   	marker.addListener('click', function() {      
+   		marker.addListener('click', function() {      
 
           infowindow.open(map, marker);
-        });
+    });
+
+   	var infowindow2 = new google.maps.InfoWindow({content: infoWindowData2});
+
+   		marker2.addListener('click', function() {      
+
+          infowindow2.open(map, marker2);
+    });
+
+   	    var infowindow3 = new google.maps.InfoWindow({content: infoWindowData3});
+
+   	marker3.addListener('click', function() {      
+
+          infowindow3.open(map, marker3);
+    });
 
 }//END addMarker()
 
