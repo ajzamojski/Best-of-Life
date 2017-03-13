@@ -18,6 +18,9 @@ $(document).ready(function(){
 
 		topic = $("#searchInput").val().trim();
 		var location = $("#locationInput").val().trim();
+		var radius = $("#recordsRetrieve").val();
+		console.log(radius);
+
 		console.log(topic);
 		console.log(location);
 
@@ -60,7 +63,7 @@ $(document).ready(function(){
 
 					chosenLat = finalResponse.results[0].geometry.location.lat;
 					chosenLng = finalResponse.results[0].geometry.location.lng;
-					return listResults = finalResponse.results;
+					listResults = finalResponse.results;
 					// console.log(listResults);
 
 					// initMap2(chosenLat, chosenLng);
@@ -139,8 +142,26 @@ var mapProp=
 	    center:new google.maps.LatLng(51.508742,-0.120850),
 	    zoom:5,
 	};
+
+	var contentString = '<div id="content">'+
+            '<div id="siteNotice">'+
+            '</div>'+
+            '<h1 id="firstHeading" class="firstHeading">Enter name here</h1>'+ "<br>" +
+            '<div id="bodyContent">'+ '<p>Address here' + '</p>' + '<br>' +
+            '<p>' + '<a href="https://en.wikipedia.org/w/index.php?title=Uluru&oldid=297882194">'+
+            'https://en.wikipedia.org/w/index.php?title=link to address here</a>' + ' </p>'
+
 		var map=new google.maps.Map(document.getElementById("googleMap"),mapProp);
 		 var marker = new google.maps.Marker({position:mapProp.center});
 		  marker.setMap(map);
+
+		  var infowindow = new google.maps.InfoWindow({
+          content: contentString
+        });
+
+	marker.addListener('click', function() {
+          infowindow.open(map, marker);
+        });
+
 }
 
