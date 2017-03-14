@@ -234,6 +234,7 @@ function addMarker(bestData, secondBest, thirdBest, searchTerm)
 	var marker2 = new google.maps.Marker({
 	    
 	    position: uluru2,
+
 	    map: map,
 	    icon: 'http://www.googlemapsmarkers.com/2/v1/D0D3D4'
 
@@ -241,13 +242,12 @@ function addMarker(bestData, secondBest, thirdBest, searchTerm)
 	var marker3 = new google.maps.Marker({
 	    
 	    position: uluru3,
+
 	    map: map,
 	    icon: 'http://www.googlemapsmarkers.com/3/v1/A04000'
 
 	});
 
-
- 
   	var infoWindowData = 
     	"<div class='infoWindow'>"+
 	    	"<h1 class='infoHeading'>The BEST "  + searchTerm.toUpperCase() + "</h1>" +

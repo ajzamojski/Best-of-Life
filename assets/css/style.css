@@ -23,13 +23,40 @@ video#bgvid {
 #title{
 	font-family: 'Dancing Script', cursive;
 	text-align: center;
-	font-size: 72px;
+	font-size: 80px;
 	color: #ffffff;
 	text-shadow: 2px 2px #999999;
 }
 
-body{
+#connectWithUs, #backToHome{
+    text-align: center;
+    font-family: 'Noto Serif', serif;
+    font-size: 18px;
+}
+
+.name{
+    float: left;
+    position: relative;
+    font-family: 'Dancing Script', cursive;
+    font-size: 40px;
+    font-weight: bold;
+    text-align: center;
+    color: #ffffff;
+}
+
+.linkedin, .github{
+    float: left;
+    padding-bottom: 3px;
+}
+
+body, .infoAddress, #submitTopic, .dropdown, .modal-body{
 	font-family: 'Noto Serif', serif;
+    height: 100%;
+}
+
+.modal-title{
+    font-family: 'Noto Serif', serif;
+    text-align: center;
 }
 
 label{
@@ -41,11 +68,15 @@ label{
 	color: #ffffff;
 }
 
-footer{
+.footer{
 	font-family: 'Noto Serif', serif;
-	font-size: 12px;
+	font-size: 14px;
 	color: #ffffff;
 	text-align: center;
+    width: 100%;
+    position: absolute;
+    bottom: 0;
+    height: 40px;
 }
 
 #submitTopic{
@@ -54,4 +85,18 @@ footer{
 
 #locationInput, #searchInput, #distanceInput{
 	margin: 0px 0px 15px 0px;
+}
+
+.infoWindow{
+    text-align: center;
+    background-color: #f2f2f2;
+}
+
+.infoHeading{
+    font-family: 'Dancing Script', cursive;
+    font-weight: bold;
+}
+
+.infoName{
+    margin: 0px 0px 10px 0px;
 }
