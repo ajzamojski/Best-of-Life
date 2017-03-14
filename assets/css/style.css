@@ -1,6 +1,11 @@
  #googleMap {
+        /*display: none;*/
         height: 400px;
         width: 100%;
+
+        box-sizing: border-box;
+         padding: 15px;
+        
        }
 
 video#bgvid { 
@@ -55,3 +60,5 @@ footer{
 #locationInput, #searchInput, #distanceInput{
 	margin: 0px 0px 15px 0px;
 }
+
+

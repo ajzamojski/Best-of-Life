@@ -1,64 +1,17 @@
-
-
-
 /*			**************** NOTES *************************
 							TO DO
-	-----------------------------------------------------
-				Todos/Ideas/Issues.
-	
-	Hi guys. How are you making out with the snow?  Here are some thoughts and outstanding issues I came up with.  If anyone wants to tackle any one item or sees something else that needs attention it would be a good idea to just comment on slack so we're all on the same page and not wasting time.
-
-	General:
-		
-	1. For some reason when map is initally hidden it takes a long time to load when submit is clicked.
-		When map is loaded when the page loads its fine.
-		Does anyone have issue with always showing the map?
-		If we do it would help solve the sticky footer issue and some other issues I'm having with the code.			
-	2. How do we want inform/display to user if the search has no results?
-	
-	3. Optional. Maybe instead of infowindows for markers we could have a panel (see mockup pictures) which also could be usee to show directions in.
-
-	4. When done we need to make sure all html, css, and js is clean, formatted nice, and commented.	
-
-
-
-	Issues we need to work on I can think of.  Add if you know of more.
-
-	Front-End
-
-		1. Map responsiveness issue.
-		2. How do we want inform/display to user if search has no results?
-		3. Footer if still an issue.
-		4. Optional. Maybe instead of infowindows for markers we should have a panel (see picture) which we could also show directions in.
-
-
-	Back-End
-
+	-----------------------------------------------------	
+	Possible Issues:
 		1.) New Search Clear Markers
 		2.) draw/center map based on location not marker
-				notes:
 				look in queryYelp drawMap() call
-				geolocation centered on location
-				yelp centered on marker
-
-
-		2a.) vertical map radius (zoom) distance is off since map is more wide than tall.
-				notes:
-				to test draw circle on map of radius.
-				then recalculate zoom to fit.	
 		
-		3.) In info window location address array loop.
-				notes:
-				console.log results.businsess array in yelp ajax.
-				look at location.display_address.
-
-		4.) Add 'error' callback function to ajax calls.
-			
-		Optional.) Directions:
-			maybe have panel with query result info, 
-			then when click directions text direction populate panel?
+		4.) In info window location address array loop
+		5.) error function to ajax calls
 		
----------------------------------------------------------------------------------------------------
+		6.) Directions
+		
+
 		Note
 		1.) Inherent issue with yelp radius search. If business "service area" or "delivery area"
 		is within your search radius. Business shows up in search.
@@ -68,8 +21,8 @@
 							
 		Check if variable need to be global 
 
-		
-			
+		Directions
+			save current location.
 
 */
 
@@ -81,7 +34,7 @@
 var latitude;
 var longitude;
 var radius;
-var zipCode;
+var postalCode;
 
 //This is the map on the page.
 var map; 
@@ -141,7 +94,7 @@ $(document).ready(function()
 		
 		event.preventDefault();
 
-		// $("#googleMap").show();
+		$("#googleMap").show();
 
 		//NEED TO CHECK INPUTS FOR VALIDITY
 		var searchTerm = $("#searchInput").val().trim();
@@ -152,7 +105,7 @@ $(document).ready(function()
 		//if locationInput is blank, use zipcode from geolocation in search.
 		if(locationInput === "")
 		{
-			place = zipCode;
+			place = postalCode;
 			geoFlag = true;
 		}
 		else
@@ -251,7 +204,7 @@ function initMap()
 			latitude = position.coords.latitude;
           	longitude = position.coords.longitude;
           	radius = 5;
-          	revGeoCode();//This assign global variable zipCode from latitiude and longitude.
+          	revGeoCode();
           	drawMap(latitude, longitude, radius);
              
         });  
@@ -276,7 +229,7 @@ function radiusToMeters(radius)
 
 //====================================================================
 
-//Used Google API geocode to assign zipCode a zip code from latitue and longitude.
+//Used Google API geocode to return a zip code from latitue and longitude.
 function revGeoCode()
 {
 
@@ -297,8 +250,8 @@ function revGeoCode()
 	})
 	.done (function(response)
 	{			
-		zipCode = response.results[0].address_components[0].long_name;					
-	});//END ajax
+		postalCode = response.results[0].address_components[0].long_name;					
+	});//END ajax geocodeUrl
 		
 }// END revGeoCode()
 
@@ -349,21 +302,13 @@ function addMarker(bestData, searchTerm)
 }//END addMarker()
 
 
+//==================================================================================
 
+
+// Removes the markers from the map
+// function clearMarkers()
+// {
+// 	setMapOnAll(null);
+// }
 //=================================== THE END =======================================
 
-
-
-
-
-
-//================================= TEST Code Below ====================================
-function clearOverlays() {
-  
-	var markersArray =[];
-
-  for (var i = 0; i < markersArray.length; i++ ) {
-    markersArray[i].setMap(null);
-  }
-  markersArray.length = 0;
-}
