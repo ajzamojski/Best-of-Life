@@ -46,10 +46,12 @@ video#bgvid {
 
 .linkedin, .github{
     float: left;
+    padding-bottom: 3px;
 }
 
 body, .infoAddress, #submitTopic, .dropdown, .modal-body{
 	font-family: 'Noto Serif', serif;
+    height: 100%;
 }
 
 .modal-title{
@@ -66,13 +68,16 @@ label{
 	color: #ffffff;
 }
 
-footer{
+.footer{
 	font-family: 'Noto Serif', serif;
 	font-size: 14px;
 	color: #ffffff;
 	text-align: center;
+    width: 100%;
+    position: absolute;
+    bottom: 0;
+    height: 40px;
 }
-
 
 #submitTopic{
 	margin: 25px 0px 20px 0px;
@@ -84,6 +89,7 @@ footer{
 
 .infoWindow{
     text-align: center;
+    background-color: #f2f2f2;
 }
 
 .infoHeading{
