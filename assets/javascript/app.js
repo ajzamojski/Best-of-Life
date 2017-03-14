@@ -220,11 +220,31 @@ function addMarker(bestData, secondBest, thirdBest, searchTerm)
 	var uluru2 = {lat: secondBest.coordinates.latitude, lng: secondBest.coordinates.longitude};
 	var uluru3 = {lat: thirdBest.coordinates.latitude, lng: thirdBest.coordinates.longitude};
 
+	var image1 = {
+		url: 'assets/images/Ribbon_1.png',
+		size: new google.maps.Size(71, 71),
+	    scaledSize: new google.maps.Size(30, 50)
+	};
+
+	var image2 = {
+		url: 'assets/images/Ribbon_2.png',
+		size: new google.maps.Size(71, 71),
+	    scaledSize: new google.maps.Size(30, 50)
+	};
+
+	var image3 = {
+		url: 'assets/images/Ribbon_3.png',
+		size: new google.maps.Size(71, 71),
+	    scaledSize: new google.maps.Size(30, 50)
+	};
+
 	var marker = new google.maps.Marker({
 	   
 	    position: uluru,
 	    map: map,
-	    icon: 'http://www.googlemapsmarkers.com/1/v1/F5B041'
+	    icon: image1,
+	    animation: google.maps.Animation.DROP
+	    
 
 	    
 	    //different icon TEST CODE
@@ -234,23 +254,23 @@ function addMarker(bestData, secondBest, thirdBest, searchTerm)
 	var marker2 = new google.maps.Marker({
 	    
 	    position: uluru2,
-
 	    map: map,
-	    icon: 'http://www.googlemapsmarkers.com/2/v1/D0D3D4'
+	    icon: image2,
+	    animation: google.maps.Animation.DROP
 
 	});
 	var marker3 = new google.maps.Marker({
 	    
 	    position: uluru3,
-
 	    map: map,
-	    icon: 'http://www.googlemapsmarkers.com/3/v1/A04000'
+	    icon: image3,
+	    animation: google.maps.Animation.DROP
 
 	});
 
   	var infoWindowData = 
     	"<div class='infoWindow'>"+
-	    	"<h1 class='infoHeading'>The BEST "  + searchTerm.toUpperCase() + "</h1>" +
+	    	"<h1 class='infoHeading'>The BEST "  + "'" + searchTerm.charAt(0).toUpperCase() + searchTerm.slice(1).toLowerCase() + "'" + "</h1>" +
 	    	"<br>" +
 	    	"<address class='infoAddress'>" +
 	     		"<h3 class='infoName'>" + bestData.name + "</h3>"+
@@ -265,7 +285,7 @@ function addMarker(bestData, secondBest, thirdBest, searchTerm)
 
 	var infoWindowData2 = 
     	"<div class='infoWindow'>"+
-	    	"<h1 class='infoHeading'>The Second Best "  + searchTerm.toUpperCase() + "</h1>" +
+	    	"<h1 class='infoHeading'>The Second Best "  + "'" + searchTerm.charAt(0).toUpperCase() + searchTerm.slice(1).toLowerCase() + "'" + "</h1>" +
 	    	"<br>" +
 	    	"<address class='infoAddress'>" +
 	     		"<h3 class='infoName'>" + secondBest.name + "</h3>"+
@@ -280,7 +300,7 @@ function addMarker(bestData, secondBest, thirdBest, searchTerm)
 
 	var infoWindowData3 = 
     	"<div class='infoWindow'>"+
-	    	"<h1 class='infoHeading'>The Third Best "  + searchTerm.toUpperCase() + "</h1>" +
+	    	"<h1 class='infoHeading'>The Third Best "  + "'" + searchTerm.charAt(0).toUpperCase() + searchTerm.slice(1).toLowerCase() + "'" + "</h1>" +
 	    	"<br>" +
 	    	"<address class='infoAddress'>" +
 	     		"<h3 class='infoName'>" + thirdBest.name + "</h3>"+
@@ -295,24 +315,29 @@ function addMarker(bestData, secondBest, thirdBest, searchTerm)
 
     var infowindow = new google.maps.InfoWindow({content: infoWindowData});
 
-   		marker.addListener('click', function() {      
+   		marker.addListener('click', function() {   
 
-          infowindow.open(map, marker);
+   			infowindow2.close(map, marker2);
+   			infowindow3.close(map, marker3);
+          	infowindow.open(map, marker);
     });
 
    	var infowindow2 = new google.maps.InfoWindow({content: infoWindowData2});
 
    		marker2.addListener('click', function() {      
-
-          infowindow2.open(map, marker2);
+   			infowindow.close(map, marker);
+   			infowindow3.close(map, marker3);
+          	infowindow2.open(map, marker2);
     });
 
-   	    var infowindow3 = new google.maps.InfoWindow({content: infoWindowData3});
+   	var infowindow3 = new google.maps.InfoWindow({content: infoWindowData3});
 
-   	marker3.addListener('click', function() {      
-
-          infowindow3.open(map, marker3);
+   		marker3.addListener('click', function() {      
+   			infowindow.close(map, marker);
+   			infowindow2.close(map, marker2);
+          	infowindow3.open(map, marker3);
     });
+
 
 }//END addMarker()
 
