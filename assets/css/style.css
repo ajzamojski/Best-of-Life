@@ -23,9 +23,28 @@ video#bgvid {
 #title{
 	font-family: 'Dancing Script', cursive;
 	text-align: center;
-	font-size: 72px;
+	font-size: 78px;
 	color: #ffffff;
 	text-shadow: 2px 2px #999999;
+}
+
+#connectWithUs, #backToHome{
+    text-align: center;
+    font-family: 'Noto Serif', serif;
+    font-size: 18px;
+}
+
+.name{
+    float: left;
+    position: relative;
+    font-family: 'Noto Serif', serif;
+    font-size: 24px;
+    text-align: center;
+    color: #ffffff;
+}
+
+.linkedin, .github{
+    float: left;
 }
 
 body{
@@ -43,7 +62,7 @@ label{
 
 footer{
 	font-family: 'Noto Serif', serif;
-	font-size: 12px;
+	font-size: 14px;
 	color: #ffffff;
 	text-align: center;
 }
