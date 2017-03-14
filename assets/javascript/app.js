@@ -30,7 +30,9 @@ var postalCode;
 //This is the map on the page.
 var map; 
 var geoFlag = false;
-
+var googleAPI = "AIzaSyBs9H9VBPWswqQbEfhd3Z-mY6-5OP4QX7M";
+var cityLatitude;
+var cityLongitude;
 
 /*==============================================================================
 ================================ Functions ====================================
@@ -64,8 +66,8 @@ $(document).ready(function()
 			place = locationInput;
 			geoFlag = false;
 		}
-					
-		queryYelp(searchTerm, place, radius);
+		
+		runGooglequery(searchTerm, place, radius);			
 
 
 	});//END #submitTopic.on("click")
@@ -78,7 +80,32 @@ $(document).ready(function()
 
 });//END document.ready
 
+// runGooglequery is called to get the location of the city entered and use its coordinate as a center point 
+// when the map is drawn.
+function runGooglequery (searchTerm, location, radius) 
+	{	
+		var searchTerm = searchTerm;
+		var radius = radius;
+		var addressRequest = "https://maps.googleapis.com/maps/api/geocode/json?address=" + location + "&key=" + googleAPI;
+		$.ajax({
+			url: addressRequest,
+			method: "GET"
 
+				}).done (function(response){
+				console.log(response);
+
+				var cityLatitude = response.results[0].geometry.location.lat;
+				console.log(cityLatitude);
+				var cityLongitude = response.results[0].geometry.location.lng;
+				console.log(cityLongitude);
+
+	    	if(!geoFlag)
+	    	{
+	    		drawMap(cityLatitude, cityLongitude, radius); 
+	    	}
+				queryYelp(searchTerm, place, radius);
+			});
+	};
 //========================================= runGoogle Query ===============================
 	
 	/*Yelp search query is sorted by 'rating' in which "The rating sort is not strictly sorted by 
@@ -101,16 +128,13 @@ $(document).ready(function()
 	    }).done(function(response) {
 
 	    	var yelpBusinessesArray = JSON.parse(response).businesses;
+	    	console.log(yelpBusinessesArray);
 
 	    	//contains object data of first element 'best' in response.businesses
 	    	var best = yelpBusinessesArray[0];
 	    	var secondBest = yelpBusinessesArray[1];
 	    	var thirdBest = yelpBusinessesArray[2];
 
-	    	if(!geoFlag)
-	    	{
-	    		drawMap(best.coordinates.latitude, best.coordinates.longitude, radius); 
-	    	}
 	    	addMarker(best, secondBest, thirdBest, searchTerm);
 
 	    });
@@ -120,12 +144,11 @@ $(document).ready(function()
 
 // Use Google Maps API to display a map of given parameters.
 function drawMap(latitude, longitude, radius) 
-{	
+{	console.log("hello5");
 	var uluru = {lat: latitude, lng: longitude};
 	
 	var zoom = radiusToZoom(radius);
 
-	
 	map = new google.maps.Map(document.getElementById('googleMap'),
 	{
 		zoom: zoom,
@@ -142,7 +165,7 @@ function drawMap(latitude, longitude, radius)
 //with a radius of about 5 miles.
 function initMap() 
 {
-
+console.log("hello4");
 	//Inital map displayed coordinates of center of US.
 	latitude = 39.8282;
 	longitude = -98.5795;
@@ -168,7 +191,7 @@ function initMap()
 
 //Converts radius in miles to approx zoom #
 function radiusToZoom(radius)
-{
+{console.log("hello2");
     return Math.round(14-Math.log(radius)/Math.LN2);
 }
 
@@ -176,7 +199,7 @@ function radiusToZoom(radius)
 
 //Converts miles to meters for radius
 function radiusToMeters(radius)
-{
+{console.log("hello3");
 	return parseInt((radius * 1000)/.62);
 }
 
@@ -187,12 +210,13 @@ function radiusToMeters(radius)
 //Used Google API geocode to return a zip code from latitue and longitude.
 function revGeoCode()
 {
-
+	console.log("hello6");
 	const GOOGLE_GEOCODE_ENDPOINT = "https://maps.googleapis.com/maps/api/geocode/json?latlng=";
 	const GOOGLE_API_KEY = "&key=AIzaSyDr-DLJtSliHGOsZhoI76ETn6jsk8kVYGo";
 	
 	//corrdinates string used in endpoint from latitude and longitude
 	var coordinates = latitude + "," + longitude;
+	console.log(coordinates);
 
 	//REVERSE GEOCODE LOOK UP 
 	var geocodeUrl = GOOGLE_GEOCODE_ENDPOINT + coordinates + "&result_type=postal_code" + GOOGLE_API_KEY;
@@ -205,7 +229,8 @@ function revGeoCode()
 	})
 	.done (function(response)
 	{			
-		postalCode = response.results[0].address_components[0].long_name;					
+		postalCode = response.results[0].address_components[0].long_name;	
+		console.log(postalCode);				
 	});//END ajax geocodeUrl
 		
 }// END revGeoCode()
@@ -215,6 +240,7 @@ function revGeoCode()
 
 function addMarker(bestData, secondBest, thirdBest, searchTerm)
 {
+	console.log("hello1");
 	
 	var uluru = {lat: bestData.coordinates.latitude, lng: bestData.coordinates.longitude};
 	var uluru2 = {lat: secondBest.coordinates.latitude, lng: secondBest.coordinates.longitude};
