@@ -221,9 +221,10 @@ function addMarker(bestData, secondBest, thirdBest, searchTerm)
 	var uluru3 = {lat: thirdBest.coordinates.latitude, lng: thirdBest.coordinates.longitude};
 
 	var marker = new google.maps.Marker({
-	    
+	   
 	    position: uluru,
-	    map: map
+	    map: map,
+	    icon: 'http://www.googlemapsmarkers.com/1/v1/F5B041'
 
 	    
 	    //different icon TEST CODE
@@ -233,13 +234,15 @@ function addMarker(bestData, secondBest, thirdBest, searchTerm)
 	var marker2 = new google.maps.Marker({
 	    
 	    position: uluru2,
-	    map: map
+	    map: map,
+	    icon: 'http://www.googlemapsmarkers.com/2/v1/D0D3D4'
 
 	});
 	var marker3 = new google.maps.Marker({
 	    
 	    position: uluru3,
-	    map: map
+	    map: map,
+	    icon: 'http://www.googlemapsmarkers.com/3/v1/A04000'
 
 	});
 
@@ -247,7 +250,7 @@ function addMarker(bestData, secondBest, thirdBest, searchTerm)
  
   	var infoWindowData = 
     	"<div class='infoWindow'>"+
-	    	"<h1 class='infoHeading'>THE BEST "  + searchTerm.toUpperCase() + "</h1>" +
+	    	"<h1 class='infoHeading'>The BEST "  + searchTerm.toUpperCase() + "</h1>" +
 	    	"<br>" +
 	    	"<address class='infoAddress'>" +
 	     		"<h3 class='infoName'>" + bestData.name + "</h3>"+
@@ -262,7 +265,7 @@ function addMarker(bestData, secondBest, thirdBest, searchTerm)
 
 	var infoWindowData2 = 
     	"<div class='infoWindow'>"+
-	    	"<h1 class='infoHeading'>THE Second Best "  + searchTerm.toUpperCase() + "</h1>" +
+	    	"<h1 class='infoHeading'>The Second Best "  + searchTerm.toUpperCase() + "</h1>" +
 	    	"<br>" +
 	    	"<address class='infoAddress'>" +
 	     		"<h3 class='infoName'>" + secondBest.name + "</h3>"+
@@ -277,7 +280,7 @@ function addMarker(bestData, secondBest, thirdBest, searchTerm)
 
 	var infoWindowData3 = 
     	"<div class='infoWindow'>"+
-	    	"<h1 class='infoHeading'>THE Third Best "  + searchTerm.toUpperCase() + "</h1>" +
+	    	"<h1 class='infoHeading'>The Third Best "  + searchTerm.toUpperCase() + "</h1>" +
 	    	"<br>" +
 	    	"<address class='infoAddress'>" +
 	     		"<h3 class='infoName'>" + thirdBest.name + "</h3>"+
