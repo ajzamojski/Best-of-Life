@@ -68,11 +68,19 @@ label{
 	color: #ffffff;
 }
 
-.footer{
-	font-family: 'Noto Serif', serif;
-	font-size: 14px;
-	color: #ffffff;
-	text-align: center;
+#footerIndex{
+    font-family: 'Noto Serif', serif;
+    font-size: 14px;
+    color: #ffffff;
+    text-align: center;
+    margin-top: 180px;
+}
+
+#footerConnect{
+    font-family: 'Noto Serif', serif;
+    font-size: 14px;
+    color: #ffffff;
+    text-align: center;
     width: 100%;
     position: absolute;
     bottom: 0;
