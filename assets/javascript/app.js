@@ -307,8 +307,7 @@ function addMarker(yelpResults, searchTerm)
 				
 			marker.content = 
 	    	"<div class='infoWindow'>"+
-		    	"<h1 class='infoHeading'>The BEST "  + "'" + searchTerm.charAt(0).toUpperCase() + searchTerm.slice(1).toLowerCase() + "'" + "</h1>" +
-		    	"<br>" +
+		    	"<h1 class='infoHeading'>The BEST "  + searchTerm.charAt(0).toUpperCase() + searchTerm.slice(1).toLowerCase() + "</h1>" +
 		    	"<address class='infoAddress'>" +
 		     		"<h3 class='infoName'>" + yelpResults[i].name + "</h3>"+
 		     		yelpResults[i].location.address1 + "<br>" +

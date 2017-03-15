@@ -98,14 +98,15 @@ label{
 
 .infoWindow{
     text-align: center;
-    background-color: #f2f2f2;
 }
 
 .infoHeading{
     font-family: 'Dancing Script', cursive;
     font-weight: bold;
+    font-size: 34px;
 }
 
 .infoName{
     margin: 0px 0px 10px 0px;
+    font-size: 24px;
 }
