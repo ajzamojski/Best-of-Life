@@ -1,22 +1,3 @@
-/*			**************** NOTES *************************
-							TO DO
-	-----------------------------------------------------	
-	Possible Issues:
-		1.) New Search Keeps Previous Markers.
-		2.) Inherent issue with yelp radius search. If business "service area" or "delivery area"
-		is within your search radius. Business shows up in search.
-		
-	
-	------------------------------------------------------		
-
-		Validate Inputs.	
-		Check if variable need to be global 
-
-		Directions
-			save current location.
-
-*/
-
 /*==============================================================================
 ================================ Variables ====================================
 ===============================================================================*/
@@ -30,9 +11,10 @@ var postalCode;
 //This is the map on the page.
 var map; 
 var geoFlag = false;
-var googleAPI = "AIzaSyDWxaJ3aYuSE7B_K6UIkM3MDc7iQ8WxkSg";
+var googleAPI = "AIzaSyBs9H9VBPWswqQbEfhd3Z-mY6-5OP4QX7M";
 var cityLatitude;
 var cityLongitude;
+var markersArray=[];
 
 /*==============================================================================
 ================================ Functions ====================================
@@ -48,13 +30,15 @@ $(document).ready(function()
 
 		$("#googleMap").show();
 
+		//Clears markers from map.
+		deleteMarkers(); 
+
 		//NEED TO CHECK INPUTS FOR VALIDITY
 		var searchTerm = $("#searchInput").val().trim();
 		var locationInput = $("#locationInput").val().trim();        
 		var radius = parseInt($("#radius").val());
 
 
-		
 		//if locationInput is blank, use zip from geolocation in search.
 		if(locationInput === "")
 		{
@@ -69,13 +53,20 @@ $(document).ready(function()
 		
 		runGooglequery(searchTerm, place, radius);			
 
+		$("#searchInput").val("");
 
 	});//END #submitTopic.on("click")
 
 
 	// Triggers modal for instructions
-	$("#myBtn").click(function(){
-        $("#myModal").modal();
+	$("#instructionsBtn").click(function(){
+        $("#instructionsModal").modal();
+    });
+    $("#howItWorksBtn").click(function(){
+        $("#howItWorksModal").modal();
+    });
+    $("#examplesBtn").click(function(){
+        $("#examplesModal").modal();
     });
 
 });//END document.ready
@@ -120,22 +111,19 @@ function runGooglequery (searchTerm, location, radius)
 
 		var queryURL = YELP_HEROKU_ENDPOINT + "?term=" + searchTerm + "&location="+ place + "&radius="+ radiusToMeters(radius);
 	
-		console.log("queryURL: " + queryURL);
+console.log("queryURL: " + queryURL);
 
 		$.ajax({
 		      url: queryURL,
 		      method: "GET"
 	    }).done(function(response) {
 
-	    	var yelpBusinessesArray = JSON.parse(response).businesses;
-	    	console.log(yelpBusinessesArray);
-
-	    	//contains object data of first element 'best' in response.businesses
-	    	var best = yelpBusinessesArray[0];
-	    	var secondBest = yelpBusinessesArray[1];
-	    	var thirdBest = yelpBusinessesArray[2];
-
-	    	addMarker(best, secondBest, thirdBest, searchTerm);
+	    	//Array of all busnisesses from Yelp query
+	    	var yelpResults = JSON.parse(response).businesses;
+console.log(yelpResults);
+//testAddress(yelpResults);
+  	
+	    	addMarker(yelpResults, searchTerm);
 
 	    });
 	}//END queryYelp()
@@ -147,7 +135,7 @@ function drawMap(latitude, longitude, radius)
 {	console.log("hello5");
 	var uluru = {lat: latitude, lng: longitude};
 	
-	var zoom = radiusToZoom(radius * 2);
+	var zoom = radiusToZoom(radius);
 
 	map = new google.maps.Map(document.getElementById('googleMap'),
 	{
@@ -181,7 +169,9 @@ console.log("hello4");
           	longitude = position.coords.longitude;
           	radius = 5;
           	revGeoCode();
-          	drawMap(latitude, longitude, radius);          
+console.log("revGeoCode DONE!");          	
+          	drawMap(latitude, longitude, radius); 
+
         });  
     }    
 
@@ -202,8 +192,6 @@ function radiusToMeters(radius)
 {console.log("hello3");
 	return parseInt((radius * 1000)/.62);
 }
-
-//====================================================================
 
 //====================================================================
 
@@ -230,7 +218,7 @@ function revGeoCode()
 	.done (function(response)
 	{			
 		postalCode = response.results[0].address_components[0].long_name;	
-		console.log(postalCode);				
+console.log(postalCode);				
 	});//END ajax geocodeUrl
 		
 }// END revGeoCode()
@@ -238,143 +226,83 @@ function revGeoCode()
 //=============================================================================
 
 
-function addMarker(bestData, secondBest, thirdBest, searchTerm)
+
+//
+function addMarker(yelpResults, searchTerm)
 {
 	console.log("hello1");
-	
-	var uluru = {lat: bestData.coordinates.latitude, lng: bestData.coordinates.longitude};
-	var uluru2 = {lat: secondBest.coordinates.latitude, lng: secondBest.coordinates.longitude};
-	var uluru3 = {lat: thirdBest.coordinates.latitude, lng: thirdBest.coordinates.longitude};
 
-	var image1 = {
-		url: 'assets/images/Ribbon_1.png',
-		size: new google.maps.Size(71, 71),
-	    scaledSize: new google.maps.Size(30, 50)
-	};
+	var icons = ["assets/images/Ribbon_1.png","assets/images/Ribbon_2.png","assets/images/Ribbon_3.png"];
 
-	var image2 = {
-		url: 'assets/images/Ribbon_2.png',
-		size: new google.maps.Size(71, 71),
-	    scaledSize: new google.maps.Size(30, 50)
-	};
 
-	var image3 = {
-		url: 'assets/images/Ribbon_3.png',
-		size: new google.maps.Size(71, 71),
-	    scaledSize: new google.maps.Size(30, 50)
-	};
+	for (var i = 0; i < 3; i++)
+	{
+		if (yelpResults[i] !== undefined)
+		{	
+			var uluru = {
+				lat: yelpResults[i].coordinates.latitude,
+				lng: yelpResults[i].coordinates.longitude
+			};
+		
+			var icon = {
+				url: icons[i],
+				size: new google.maps.Size(71, 71),
+		   		scaledSize: new google.maps.Size(30, 50)
+			};
 
-	var marker = new google.maps.Marker({
+			var marker = new google.maps.Marker({
 	   
-	    position: uluru,
-	    map: map,
-	    icon: image1,
-	    animation: google.maps.Animation.DROP
-	    
+			    position: uluru,
+			    map: map,
+			    icon: icon,
+			    animation: google.maps.Animation.DROP
+			    
+			});
 
-	    
-	    //different icon TEST CODE
-	    //icon:'assets/images/ribbon-sm.png',
-	    //animation:google.maps.Animation.BOUNCE
-	});//END marker
-	var marker2 = new google.maps.Marker({
-	    
-	    position: uluru2,
-	    map: map,
-	    icon: image2,
-	    animation: google.maps.Animation.DROP
+			markersArray.push(marker);
+				
+			marker.content = 
+	    	"<div class='infoWindow'>"+
+		    	"<h1 class='infoHeading'>The BEST "  + "'" + searchTerm.charAt(0).toUpperCase() + searchTerm.slice(1).toLowerCase() + "'" + "</h1>" +
+		    	"<br>" +
+		    	"<address class='infoAddress'>" +
+		     		"<h3 class='infoName'>" + yelpResults[i].name + "</h3>"+
+		     		yelpResults[i].location.address1 + "<br>" +
+		    		yelpResults[i].location.city + ", " + yelpResults[i].location.state + 
+		    		" " + yelpResults[i].location.zip_code + 
+		    		"<br>" +
+		     		yelpResults[i].display_phone + "</p>" +   	    		
+		   			"<p>" + 
+		   				"<a href=" + yelpResults[i].url + ">" + "Visit On Yelp</a>" + 
+		   			"</p>" +
+		   		"</address>"+	
+			"</div>";
 
-	});
-	var marker3 = new google.maps.Marker({
-	    
-	    position: uluru3,
-	    map: map,
-	    icon: image3,
-	    animation: google.maps.Animation.DROP
 
-	});
+			var infoWindow = new google.maps.InfoWindow();
+			google.maps.event.addListener(marker, 'click', function () 
+			{
+                infoWindow.setContent(this.content);
+                infoWindow.open(this.getMap(), this);
+            });
+			
 
-  	var infoWindowData = 
-    	"<div class='infoWindow'>"+
-	    	"<h1 class='infoHeading'>The BEST "  + "'" + searchTerm.charAt(0).toUpperCase() + searchTerm.slice(1).toLowerCase() + "'" + "</h1>" +
-	    	"<br>" +
-	    	"<address class='infoAddress'>" +
-	     		"<h3 class='infoName'>" + bestData.name + "</h3>"+
-	     		bestData.location.display_address[0] + "<br>" +
-	    		bestData.location.display_address[1] + "<br>" +
-	     		bestData.display_phone + "</p>" +   	    		
-	   			"<p>" + 
-	   				"<a href=" + bestData.url + ">" + "Visit On Yelp</a>" + 
-	   			"</p>" +
-	   		"</address>"+	
-		"</div>";
+		}//END if
 
-	var infoWindowData2 = 
-    	"<div class='infoWindow'>"+
-	    	"<h1 class='infoHeading'>The Second Best "  + "'" + searchTerm.charAt(0).toUpperCase() + searchTerm.slice(1).toLowerCase() + "'" + "</h1>" +
-	    	"<br>" +
-	    	"<address class='infoAddress'>" +
-	     		"<h3 class='infoName'>" + secondBest.name + "</h3>"+
-	     		secondBest.location.display_address[0] + "<br>" +
-	    		secondBest.location.display_address[1] + "<br>" +
-	     		secondBest.display_phone + "</p>" +   	    		
-	   			"<p>" + 
-	   				"<a href=" + secondBest.url + ">" + "Visit On Yelp</a>" + 
-	   			"</p>" +
-	   		"</address>"+	
-		"</div>";
-
-	var infoWindowData3 = 
-    	"<div class='infoWindow'>"+
-	    	"<h1 class='infoHeading'>The Third Best "  + "'" + searchTerm.charAt(0).toUpperCase() + searchTerm.slice(1).toLowerCase() + "'" + "</h1>" +
-	    	"<br>" +
-	    	"<address class='infoAddress'>" +
-	     		"<h3 class='infoName'>" + thirdBest.name + "</h3>"+
-	     		thirdBest.location.display_address[0] + "<br>" +
-	    		thirdBest.location.display_address[1] + "<br>" +
-	     		thirdBest.display_phone + "</p>" +   	    		
-	   			"<p>" + 
-	   				"<a href=" + thirdBest.url + ">" + "Visit On Yelp</a>" + 
-	   			"</p>" +
-	   		"</address>"+	
-		"</div>";
-
-    var infowindow = new google.maps.InfoWindow({content: infoWindowData});
-
-   		marker.addListener('click', function() {   
-
-   			infowindow2.close(map, marker2);
-   			infowindow3.close(map, marker3);
-          	infowindow.open(map, marker);
-    });
-
-   	var infowindow2 = new google.maps.InfoWindow({content: infoWindowData2});
-
-   		marker2.addListener('click', function() {      
-   			infowindow.close(map, marker);
-   			infowindow3.close(map, marker3);
-          	infowindow2.open(map, marker2);
-    });
-
-   	var infowindow3 = new google.maps.InfoWindow({content: infoWindowData3});
-
-   		marker3.addListener('click', function() {      
-   			infowindow.close(map, marker);
-   			infowindow2.close(map, marker2);
-          	infowindow3.open(map, marker3);
-    });
-
+	}//END for
 
 }//END addMarker()
 
 
 //==================================================================================
-
-
-// Removes the markers from the map
-// function clearMarkers()
-// {
-// 	setMapOnAll(null);
-// }
+   
+// Deletes all markers in the array by removing references to them.
+function deleteMarkers() 
+{
+	for (var i = 0; i < markersArray.length; i++)
+	{
+	  markersArray[i].setMap(null);
+	}
+	markersArray = [];
+}//END deleteMarkers()
 //=================================== THE END =======================================
-
