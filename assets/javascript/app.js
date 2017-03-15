@@ -173,6 +173,18 @@ console.log("queryURL: " + queryURL);//TEST CODE REMOVE
 	    	//Array of all busnisesses from Yelp query
 	    	var yelpResults = JSON.parse(response).businesses;
 
+	    	if (yelpResults[0] === undefined)
+	    	{
+	    	console.log("no Results");
+	    		$("#span-searchTerm").html(searchTerm);
+	    		$("#noResults").modal();
+	    		$("#searchInput").val("");
+	    		return;
+
+	    	}
+
+console.log("this should not execute if no results");//TEST CODE REMOVE
+
 console.log(yelpResults);//TEST CODE REMOVE
 
   	
