@@ -1,20 +1,3 @@
-/*	
-	What Doug Updated
-	
-	-Backed up previous app.js file in 3-15-9am-backup-app.js
-
-	-Added Ibad's key functions to prevent unwanted input characters. lines 38 -65;
-
-	-commented out ' $("#googleMap").hide();' line 34 and replaced with display: none; in CSS.
-
-	-converted 'radius' to meters in 'submit'on."click" because all queries use meters radius only has to be conveted once.
-
-	-changed radiusToZoom() so it converts 'meters' instead of miles to 'zoom';
-
-	-made small changes in runGoogleQuery; see comment in code.
-
-*/
-
 
 /*==============================================================================
 ================================ Variables ====================================
@@ -40,37 +23,8 @@ var markersArray=[];
 
 $(document).ready(function()
 {
-	//replaced this with display: none; in css -doug
-	// $("#googleMap").hide();
-
-	//prevent unwanted characters from being entered in 'Search Topic' input box
-	 $(function () 
-	 {
-		$('#searchInput').keydown(function (e) 
-		{				
-			var key = e.keyCode;
-			
-			if (!((key == 8) || (key == 32) || (key == 46) || (key >= 35 && key <= 40) || (key >= 65 && key <= 90)))
-			{
-			 	e.preventDefault();
-			}
-		
-		});
-	 });//END prevent numbers
-
-    //prevent unwanted characters from being entered in 'Location' input box
-    $(function () 
-    {
-    	$('#locationInput').keydown(function (e)     	
-   		{
-   			 var key = e.keyCode;
-   			 if (!((key == 8) || (key == 32) || (key == 188)|| (key == 46) || (key >= 35 && key <= 40) || (key >= 48 && key <= 105))) 
-   			 {
-    			e.preventDefault();
-   			 }
-    	
-    	});
-    }); 
+	
+	$("#googleMap").hide();
 	
 	$("#submitTopic").on('click', function(event){
 		
@@ -84,9 +38,8 @@ $(document).ready(function()
 		//NEED TO CHECK INPUTS FOR VALIDITY
 		var searchTerm = $("#searchInput").val().trim();
 		var locationInput = $("#locationInput").val().trim();        
-		
-		//Gets radius from user in miles and converts to meters.
-		var radius = radiusToMeters(parseInt($("#radius").val()));
+		var radius = parseInt($("#radius").val());
+
 
 		//if locationInput is blank, use zip from geolocation in search.
 		if(locationInput === "")
@@ -124,23 +77,20 @@ $(document).ready(function()
 // when the map is drawn.
 function runGooglequery (searchTerm, location, radius) 
 	{	
-		
-		//These dont need to be declared here since they are declared in function declaration right above
-		//var searchTerm = searchTerm;
-		//var radius = radius;
-		
+		var searchTerm = searchTerm;
+		var radius = radius;
 		var addressRequest = "https://maps.googleapis.com/maps/api/geocode/json?address=" + location + "&key=" + googleAPI;
 		$.ajax({
 			url: addressRequest,
 			method: "GET"
 
 				}).done (function(response){
-			console.log(response);//TEST CODE REMOVE
+				console.log(response);
 
 				var cityLatitude = response.results[0].geometry.location.lat;
-			console.log(cityLatitude);//TEST CODE REMOVE
+				console.log(cityLatitude);
 				var cityLongitude = response.results[0].geometry.location.lng;
-			console.log(cityLongitude);//TEST CODE REMOVE
+				console.log(cityLongitude);
 
 	    	if(!geoFlag)
 	    	{
@@ -161,9 +111,9 @@ function runGooglequery (searchTerm, location, radius)
 
 		const YELP_HEROKU_ENDPOINT = "https://floating-fortress-53764.herokuapp.com/"
 
-		var queryURL = YELP_HEROKU_ENDPOINT + "?term=" + searchTerm + "&location="+ place + "&radius="+ radius;
+		var queryURL = YELP_HEROKU_ENDPOINT + "?term=" + searchTerm + "&location="+ place + "&radius="+ radiusToMeters(radius);
 	
-console.log("queryURL: " + queryURL);//TEST CODE REMOVE
+console.log("queryURL: " + queryURL);
 
 		$.ajax({
 		      url: queryURL,
@@ -172,9 +122,8 @@ console.log("queryURL: " + queryURL);//TEST CODE REMOVE
 
 	    	//Array of all busnisesses from Yelp query
 	    	var yelpResults = JSON.parse(response).businesses;
-
-console.log(yelpResults);//TEST CODE REMOVE
-
+console.log(yelpResults);
+//testAddress(yelpResults);
   	
 	    	addMarker(yelpResults, searchTerm);
 
@@ -185,9 +134,7 @@ console.log(yelpResults);//TEST CODE REMOVE
 
 // Use Google Maps API to display a map of given parameters.
 function drawMap(latitude, longitude, radius) 
-{	
-console.log("hello5");//TEST CODE REMOVE
-	
+{	console.log("hello5");
 	var uluru = {lat: latitude, lng: longitude};
 	
 	var zoom = radiusToZoom(radius);
@@ -208,9 +155,7 @@ console.log("hello5");//TEST CODE REMOVE
 //with a radius of about 5 miles.
 function initMap() 
 {
-
-console.log("hello4");//TEST CODE REMOVE
-	
+console.log("hello4");
 	//Inital map displayed coordinates of center of US.
 	latitude = 39.8282;
 	longitude = -98.5795;
@@ -224,10 +169,9 @@ console.log("hello4");//TEST CODE REMOVE
 		{
 			latitude = position.coords.latitude;
           	longitude = position.coords.longitude;
-          	radius = 8064;
+          	radius = 5;
           	revGeoCode();
-console.log("revGeoCode DONE!");//TEST CODE REMOVE          	
-          	
+console.log("revGeoCode DONE!");          	
           	drawMap(latitude, longitude, radius); 
 
         });  
@@ -239,20 +183,15 @@ console.log("revGeoCode DONE!");//TEST CODE REMOVE
 
 //Converts radius in miles to approx zoom #
 function radiusToZoom(radius)
-{
-console.log("hello2");//TEST CODE REMOVE
-    
-    return Math.round(14-Math.log((radius*.62)/1000)/Math.LN2);
+{console.log("hello2");
+    return Math.round(14-Math.log(radius)/Math.LN2);
 }
 
 //=============================================================
 
 //Converts miles to meters for radius
 function radiusToMeters(radius)
-{
-
-console.log("hello3");//TEST CODE REMOVE
-	
+{console.log("hello3");
 	return parseInt((radius * 1000)/.62);
 }
 
@@ -261,16 +200,13 @@ console.log("hello3");//TEST CODE REMOVE
 //Used Google API geocode to return a zip code from latitue and longitude.
 function revGeoCode()
 {
-
-console.log("hello6");//TEST CODE REMOVE
-	
+	console.log("hello6");
 	const GOOGLE_GEOCODE_ENDPOINT = "https://maps.googleapis.com/maps/api/geocode/json?latlng=";
 	const GOOGLE_API_KEY = "&key=AIzaSyDr-DLJtSliHGOsZhoI76ETn6jsk8kVYGo";
 	
 	//corrdinates string used in endpoint from latitude and longitude
 	var coordinates = latitude + "," + longitude;
-
-console.log(coordinates);//TEST CODE REMOVE
+	console.log(coordinates);
 
 	//REVERSE GEOCODE LOOK UP 
 	var geocodeUrl = GOOGLE_GEOCODE_ENDPOINT + coordinates + "&result_type=postal_code" + GOOGLE_API_KEY;
@@ -284,9 +220,7 @@ console.log(coordinates);//TEST CODE REMOVE
 	.done (function(response)
 	{			
 		postalCode = response.results[0].address_components[0].long_name;	
-
-console.log(postalCode);//TEST CODE REMOVE				
-	
+console.log(postalCode);				
 	});//END ajax geocodeUrl
 		
 }// END revGeoCode()
@@ -346,15 +280,17 @@ function addMarker(yelpResults, searchTerm)
 		   		"</address>"+	
 			"</div>";
 
+
 			var infoWindow = new google.maps.InfoWindow();
 			google.maps.event.addListener(marker, 'click', function () 
 			{
                 infoWindow.setContent(this.content);
                 infoWindow.open(this.getMap(), this);
             });
+			
 
 		}//END if
-	
+
 	}//END for
 
 }//END addMarker()
