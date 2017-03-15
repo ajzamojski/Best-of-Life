@@ -113,7 +113,16 @@ function runGooglequery (searchTerm, location, radius)
 
 			}).done (function(response){
 console.log(response);//TEST CODE REMOVE
+console.log(response.status);
+			
+			if (response.status === "ZERO_RESULTS") {
 
+				$("#span-locationTerm").html(location);
+				$("#locationFailed").modal();
+	    		$("#locationInput").val("");
+	    			return;
+
+			};
 			var cityLatitude = response.results[0].geometry.location.lat;
 console.log("cityLat: " + cityLatitude);//TEST CODE REMOVE
 			var cityLongitude = response.results[0].geometry.location.lng;
