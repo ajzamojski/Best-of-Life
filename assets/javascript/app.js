@@ -295,7 +295,10 @@ console.log(coordinates);//TEST CODE REMOVE
 	})
 	.done (function(response)
 	{			
-		postalCode = response.results[0].address_components[0].long_name;	
+		postalCode = response.results[0].address_components[0].long_name;
+
+		//Populates 'location' input box with golocation postal code 
+		$("#locationInput").val(postalCode);	
 
 console.log(postalCode);//TEST CODE REMOVE				
 	
