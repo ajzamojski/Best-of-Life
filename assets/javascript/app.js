@@ -30,7 +30,7 @@ var postalCode;
 //This is the map on the page.
 var map; 
 var geoFlag = false;
-var googleAPI = "AIzaSyBs9H9VBPWswqQbEfhd3Z-mY6-5OP4QX7M";
+var googleAPI = "AIzaSyDWxaJ3aYuSE7B_K6UIkM3MDc7iQ8WxkSg";
 var cityLatitude;
 var cityLongitude;
 
