@@ -1,17 +1,9 @@
 /*	
 	What Doug Updated
 	
-	-Backed up previous app.js file in 3-15-9am-backup-app.js
+	added comment in html for modal 'noResults'
 
-	-Added Ibad's key functions to prevent unwanted input characters. lines 38 -65;
-
-	-commented out ' $("#googleMap").hide();' line 34 and replaced with display: none; in CSS.
-
-	-converted 'radius' to meters in 'submit'on."click" because all queries use meters radius only has to be conveted once.
-
-	-changed radiusToZoom() so it converts 'meters' instead of miles to 'zoom';
-
-	-made small changes in runGoogleQuery; see comment in code.
+	fixed tabing issue.  lines 45 & 59 added (key == 9) for 'tab' key.
 
 */
 
@@ -50,7 +42,7 @@ $(document).ready(function()
 		{				
 			var key = e.keyCode;
 			
-			if (!((key == 8) || (key == 32) || (key == 46) || (key >= 35 && key <= 40) || (key >= 65 && key <= 90)))
+			if (!((key == 8) || (key == 9) ||(key == 32) || (key == 46) || (key >= 35 && key <= 40) || (key >= 65 && key <= 90)))
 			{
 			 	e.preventDefault();
 			}
@@ -64,7 +56,7 @@ $(document).ready(function()
     	$('#locationInput').keydown(function (e)     	
    		{
    			 var key = e.keyCode;
-   			 if (!((key == 8) || (key == 32) || (key == 188)|| (key == 46) || (key >= 35 && key <= 40) || (key >= 48 && key <= 105))) 
+   			 if (!((key == 8) || (key == 9) || (key == 32) || (key == 188)|| (key == 46) || (key >= 35 && key <= 40) || (key >= 48 && key <= 105))) 
    			 {
     			e.preventDefault();
    			 }
