@@ -1,10 +1,17 @@
 /*	
 	What Doug Updated
+		
+	Changed API key in runGoogleQuery so they all use the same one.
+
+	removed 'place' variable changed to 'location'
+
+	changed most global varibles to local ones.
+
+	removed default lat, long, radius values along with drawMap() calls in initmap.
 	
-	added comment in html for modal 'noResults'
-
-	fixed tabing issue.  lines 45 & 59 added (key == 9) for 'tab' key.
-
+	removed geoFlag and if statments from submit click & runGooglequery
+	
+	Cleaned up code a bit.
 */
 
 
@@ -12,18 +19,13 @@
 ================================ Variables ====================================
 ===============================================================================*/
 
-
-var latitude;
-var longitude;
-var radius;
-var postalCode;
+//Constant containing Google API key.
+const GOOGLE_API_KEY = "&key=AIzaSyDr-DLJtSliHGOsZhoI76ETn6jsk8kVYGo";
 
 //This is the map on the page.
 var map; 
-var geoFlag = false;
-var googleAPI = "AIzaSyBs9H9VBPWswqQbEfhd3Z-mY6-5OP4QX7M";
-var cityLatitude;
-var cityLongitude;
+
+//Array used for map markers.
 var markersArray=[];
 
 /*==============================================================================
@@ -59,8 +61,7 @@ $(document).ready(function()
    			 if (!((key == 8) || (key == 9) || (key == 32) || (key == 188)|| (key == 46) || (key >= 35 && key <= 40) || (key >= 48 && key <= 105))) 
    			 {
     			e.preventDefault();
-   			 }
-    	
+   			 }   	
     	});
     }); 
 	
@@ -79,20 +80,8 @@ $(document).ready(function()
 		
 		//Gets radius from user in miles and converts to meters.
 		var radius = radiusToMeters(parseInt($("#radius").val()));
-
-		//if locationInput is blank, use zip from geolocation in search.
-		if(locationInput === "")
-		{
-			place = postalCode;
-			geoFlag = true;
-		}
-		else
-		{
-			place = locationInput;
-			geoFlag = false;
-		}
 		
-		runGooglequery(searchTerm, place, radius);			
+		runGooglequery(searchTerm, locationInput, radius);			
 
 		$("#searchInput").val("");
 
@@ -115,32 +104,26 @@ $(document).ready(function()
 // runGooglequery is called to get the location of the city entered and use its coordinate as a center point 
 // when the map is drawn.
 function runGooglequery (searchTerm, location, radius) 
-	{	
-		
-		//These dont need to be declared here since they are declared in function declaration right above
-		//var searchTerm = searchTerm;
-		//var radius = radius;
-		
-		var addressRequest = "https://maps.googleapis.com/maps/api/geocode/json?address=" + location + "&key=" + googleAPI;
-		$.ajax({
-			url: addressRequest,
-			method: "GET"
+{	
+	
+	var addressRequest = "https://maps.googleapis.com/maps/api/geocode/json?address=" + location + "&key=" + GOOGLE_API_KEY;
+	$.ajax({
+		url: addressRequest,
+		method: "GET"
 
-				}).done (function(response){
-			console.log(response);//TEST CODE REMOVE
+			}).done (function(response){
+console.log(response);//TEST CODE REMOVE
 
-				var cityLatitude = response.results[0].geometry.location.lat;
-			console.log(cityLatitude);//TEST CODE REMOVE
-				var cityLongitude = response.results[0].geometry.location.lng;
-			console.log(cityLongitude);//TEST CODE REMOVE
-
-	    	if(!geoFlag)
-	    	{
-	    		drawMap(cityLatitude, cityLongitude, radius); 
-	    	}
-				queryYelp(searchTerm, place, radius);
-			});
-	};
+			var cityLatitude = response.results[0].geometry.location.lat;
+console.log("cityLat: " + cityLatitude);//TEST CODE REMOVE
+			var cityLongitude = response.results[0].geometry.location.lng;
+console.log("cityLong: " + cityLongitude);//TEST CODE REMOVE
+    	
+    		drawMap(cityLatitude, cityLongitude, radius); 
+    	
+			queryYelp(searchTerm, location, radius);
+		});
+};
 //========================================= runGoogle Query ===============================
 	
 	/*Yelp search query is sorted by 'rating' in which "The rating sort is not strictly sorted by 
@@ -148,12 +131,15 @@ function runGooglequery (searchTerm, location, radius)
 	ratings, similar to a bayesian average. This is so a business with 1 rating of 5 stars 
 	doesn’t immediately jump to the top.". 
 	*/
-	function queryYelp(searchTerm, place, radius) 
+	function queryYelp(searchTerm, location, radius)
 	{	
-
+console.log("queryYelp searchTerm: " + searchTerm);//TEST CODE REMOVE	
+console.log("queryYelp place: " + location);//TEST CODE REMOVE	
+console.log("queryYelp radius: " + radius);//TEST CODE REMOVE	
+		
 		const YELP_HEROKU_ENDPOINT = "https://floating-fortress-53764.herokuapp.com/"
 
-		var queryURL = YELP_HEROKU_ENDPOINT + "?term=" + searchTerm + "&location="+ place + "&radius="+ radius;
+		var queryURL = YELP_HEROKU_ENDPOINT + "?term=" + searchTerm + "&location="+ location + "&radius="+ radius;
 	
 console.log("queryURL: " + queryURL);//TEST CODE REMOVE
 
@@ -166,20 +152,15 @@ console.log("queryURL: " + queryURL);//TEST CODE REMOVE
 	    	var yelpResults = JSON.parse(response).businesses;
 
 	    	if (yelpResults[0] === undefined)
-	    	{
-	    	console.log("no Results");
+	    	{	    		
 	    		$("#span-searchTerm").html(searchTerm);
 	    		$("#noResults").modal();
 	    		$("#searchInput").val("");
 	    		return;
-
 	    	}
 
-console.log("this should not execute if no results");//TEST CODE REMOVE
-
 console.log(yelpResults);//TEST CODE REMOVE
-
-  	
+ 	
 	    	addMarker(yelpResults, searchTerm);
 
 	    });
@@ -207,33 +188,21 @@ console.log("hello5");//TEST CODE REMOVE
 //============================= drawMap =============================================
 
 //When page first loads this is called via <script> tag in html.
-//Initally generic map is displayed of center USA showing whole country.
-//If geolocation is detected map is displayed based on that location
-//with a radius of about 5 miles.
+//If geolocation is detected, revGeoCode populates 'location' input 
+//with zip of geolocation.
+
 function initMap() 
 {
 
 console.log("hello4");//TEST CODE REMOVE
 	
-	//Inital map displayed coordinates of center of US.
-	latitude = 39.8282;
-	longitude = -98.5795;
-	radius = 1000;
-	drawMap(latitude, longitude, radius);
-
-	//If goeloaction is detected display map of users locaction.
 	if(navigator.geolocation)
 	{
 		navigator.geolocation.getCurrentPosition(function(position)
 		{
-			latitude = position.coords.latitude;
-          	longitude = position.coords.longitude;
-          	radius = 8064;
-          	revGeoCode();
-console.log("revGeoCode DONE!");//TEST CODE REMOVE          	
-          	
-          	drawMap(latitude, longitude, radius); 
-
+			var latitude = position.coords.latitude;
+          	var longitude = position.coords.longitude;
+          	revGeoCode(latitude, longitude);
         });  
     }    
 
@@ -263,13 +232,13 @@ console.log("hello3");//TEST CODE REMOVE
 //====================================================================
 
 //Used Google API geocode to return a zip code from latitue and longitude.
-function revGeoCode()
+function revGeoCode(latitude, longitude)
 {
 
 console.log("hello6");//TEST CODE REMOVE
 	
 	const GOOGLE_GEOCODE_ENDPOINT = "https://maps.googleapis.com/maps/api/geocode/json?latlng=";
-	const GOOGLE_API_KEY = "&key=AIzaSyDr-DLJtSliHGOsZhoI76ETn6jsk8kVYGo";
+	
 	
 	//corrdinates string used in endpoint from latitude and longitude
 	var coordinates = latitude + "," + longitude;
@@ -287,12 +256,12 @@ console.log(coordinates);//TEST CODE REMOVE
 	})
 	.done (function(response)
 	{			
-		postalCode = response.results[0].address_components[0].long_name;
+		var zipCode = response.results[0].address_components[0].long_name;
 
-		//Populates 'location' input box with golocation postal code 
-		$("#locationInput").val(postalCode);	
+		//Populates 'location' input box with golocation zip code 
+		$("#locationInput").val(zipCode);	
 
-console.log(postalCode);//TEST CODE REMOVE				
+console.log(zipCode);//TEST CODE REMOVE				
 	
 	});//END ajax geocodeUrl
 		
@@ -305,7 +274,7 @@ console.log(postalCode);//TEST CODE REMOVE
 //
 function addMarker(yelpResults, searchTerm)
 {
-	console.log("hello1");
+	console.log("hello1");//TEST CODE REMOVE	
 
 	var icons = ["assets/images/Ribbon_1.png","assets/images/Ribbon_2.png","assets/images/Ribbon_3.png"];
 
