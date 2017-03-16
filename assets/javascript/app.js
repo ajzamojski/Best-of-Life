@@ -21,7 +21,7 @@ var markersArray=[];
 //
 $(document).ready(function()
 {	
-	//Show 'instructions/welcome' module when page first loads.
+	//Show 'instructions/welcome' modal when page first loads.
 	$("#instructionsModal").modal();
 
 	//prevent unwanted characters from being entered in 'Search Topic' input box
@@ -55,8 +55,6 @@ $(document).ready(function()
 	$("#submitTopic").on('click', function(event){
 		
 		event.preventDefault();
-
-		$("#googleMap").show();// move this
 
 		//Clears markers from map.
 		deleteMarkers(); 
@@ -193,6 +191,8 @@ function drawMap(latitude, longitude, radius)
 		zoom: zoom,
 		center: uluru
 	});
+
+	$("#googleMap").show();
 
 }//END drawMap()
 
