@@ -1,18 +1,3 @@
-/*	
-	What Doug Updated
-		
-	Changed API key in runGoogleQuery so they all use the same one.
-
-	removed 'place' variable changed to 'location'
-
-	changed most global varibles to local ones.
-
-	removed default lat, long, radius values along with drawMap() calls in initmap.
-	
-	removed geoFlag and if statments from submit click & runGooglequery
-	
-	Cleaned up code a bit.
-*/
 
 
 /*==============================================================================
@@ -28,15 +13,14 @@ var map;
 //Array used for map markers.
 var markersArray=[];
 
+
 /*==============================================================================
 ================================ Functions ====================================
 ===============================================================================*/
 
+//
 $(document).ready(function()
-{
-	//replaced this with display: none; in css -doug
-	// $("#googleMap").hide();
-
+{	
 	//prevent unwanted characters from being entered in 'Search Topic' input box
 	 $(function () 
 	 {
@@ -69,21 +53,35 @@ $(document).ready(function()
 		
 		event.preventDefault();
 
-		$("#googleMap").show();
+		$("#googleMap").show();// move this
 
 		//Clears markers from map.
 		deleteMarkers(); 
 
 		//NEED TO CHECK INPUTS FOR VALIDITY
 		var searchTerm = $("#searchInput").val().trim();
-		var locationInput = $("#locationInput").val().trim();        
+		var locationInput = $("#locationInput").val().trim(); 
+
+		//Tests if 'Search Topic' input is empty. If so alerts user.
+		if (searchTerm == "")
+		{
+			$("#span-input").html("Search Topic");
+			$("#emptyInput").modal();			
+			return;
+		}
+		
+		//Tests if 'Location' input is empty. If so alerts user.
+		if (locationInput === "")
+		{
+			$("#span-input").html("Location");
+			$("#emptyInput").modal();
+			return;
+		}		
 		
 		//Gets radius from user in miles and converts to meters.
 		var radius = radiusToMeters(parseInt($("#radius").val()));
 		
-		runGooglequery(searchTerm, locationInput, radius);			
-
-		$("#searchInput").val("");
+		runGoogleQuery(searchTerm, locationInput, radius);			
 
 	});//END #submitTopic.on("click")
 
@@ -101,39 +99,44 @@ $(document).ready(function()
 
 });//END document.ready
 
+
+//==========================================================================
+//=========================== runGoogleQuery ===============================
+
 // runGooglequery is called to get the location of the city entered and use its coordinate as a center point 
 // when the map is drawn.
-function runGooglequery (searchTerm, location, radius) 
-{	
-	
+function runGoogleQuery (searchTerm, location, radius) 
+{		
 	var addressRequest = "https://maps.googleapis.com/maps/api/geocode/json?address=" + location + "&key=" + GOOGLE_API_KEY;
 	$.ajax({
 		url: addressRequest,
 		method: "GET"
 
-			}).done (function(response){
-console.log(response);//TEST CODE REMOVE
-console.log(response.status);
-			
-			if (response.status === "ZERO_RESULTS") {
+	}).done (function(response)
+	{
 
-				$("#span-locationTerm").html(location);
-				$("#locationFailed").modal();
-	    		$("#locationInput").val("");
-	    			return;
+		if (response.status === "ZERO_RESULTS") 
+		{
 
-			};
-			var cityLatitude = response.results[0].geometry.location.lat;
-console.log("cityLat: " + cityLatitude);//TEST CODE REMOVE
-			var cityLongitude = response.results[0].geometry.location.lng;
-console.log("cityLong: " + cityLongitude);//TEST CODE REMOVE
-    	
-    		drawMap(cityLatitude, cityLongitude, radius); 
-    	
-			queryYelp(searchTerm, location, radius);
-		});
-};
-//========================================= runGoogle Query ===============================
+			$("#span-locationTerm").html(location);
+			$("#locationFailed").modal();
+    		$("#locationInput").val("");
+    		return;
+		};
+		
+		var cityLatitude = response.results[0].geometry.location.lat;
+		var cityLongitude = response.results[0].geometry.location.lng;
+	
+		drawMap(cityLatitude, cityLongitude, radius); 
+	
+		queryYelp(searchTerm, location, radius);
+	});
+
+}//END runGoogleQuery
+
+
+//==========================================================================
+//============================== queryYelp =================================
 	
 	/*Yelp search query is sorted by 'rating' in which "The rating sort is not strictly sorted by 
 	the rating value, but by an adjusted rating value that takes into account the number of 
@@ -141,17 +144,11 @@ console.log("cityLong: " + cityLongitude);//TEST CODE REMOVE
 	doesn’t immediately jump to the top.". 
 	*/
 	function queryYelp(searchTerm, location, radius)
-	{	
-console.log("queryYelp searchTerm: " + searchTerm);//TEST CODE REMOVE	
-console.log("queryYelp place: " + location);//TEST CODE REMOVE	
-console.log("queryYelp radius: " + radius);//TEST CODE REMOVE	
-		
+	{					
 		const YELP_HEROKU_ENDPOINT = "https://floating-fortress-53764.herokuapp.com/"
 
 		var queryURL = YELP_HEROKU_ENDPOINT + "?term=" + searchTerm + "&location="+ location + "&radius="+ radius;
 	
-console.log("queryURL: " + queryURL);//TEST CODE REMOVE
-
 		$.ajax({
 		      url: queryURL,
 		      method: "GET"
@@ -167,24 +164,22 @@ console.log("queryURL: " + queryURL);//TEST CODE REMOVE
 	    		$("#searchInput").val("");
 	    		return;
 	    	}
-
-console.log(yelpResults);//TEST CODE REMOVE
  	
-	    	addMarker(yelpResults, searchTerm);
+	    	addMarkers(yelpResults, searchTerm);
 
 	    });
 	}//END queryYelp()
-//============================= drawMap =============================================
 
+
+//==========================================================================
+//============================== drawMap() =================================
 
 // Use Google Maps API to display a map of given parameters.
 function drawMap(latitude, longitude, radius) 
 {	
-console.log("hello5");//TEST CODE REMOVE
-	
 	var uluru = {lat: latitude, lng: longitude};
 	
-	var zoom = radiusToZoom(radius * 2);
+	var zoom = radiusToZoom(radius);
 
 	map = new google.maps.Map(document.getElementById('googleMap'),
 	{
@@ -194,17 +189,15 @@ console.log("hello5");//TEST CODE REMOVE
 
 }//END drawMap()
 
-//============================= drawMap =============================================
+
+//==========================================================================
+//============================== initMap() =================================
 
 //When page first loads this is called via <script> tag in html.
-//If geolocation is detected, revGeoCode populates 'location' input 
+//If geolocation is detected, revGeoCode() populates 'location' input 
 //with zip of geolocation.
-
 function initMap() 
-{
-
-console.log("hello4");//TEST CODE REMOVE
-	
+{	
 	if(navigator.geolocation)
 	{
 		navigator.geolocation.getCurrentPosition(function(position)
@@ -217,42 +210,40 @@ console.log("hello4");//TEST CODE REMOVE
 
 }//END initMap()
 
-//=============================================================
 
-//Converts radius in miles to approx zoom #
+//==========================================================================
+//=========================== radiusToZoom() ===============================
+
+//Converts radius in meters to appropriate zoom #
 function radiusToZoom(radius)
-{
-console.log("hello2");//TEST CODE REMOVE
-    
-    return Math.round(14-Math.log((radius*.62)/1000)/Math.LN2);
-}
+{   
+    return Math.round(14-Math.log((radius*.62*2)/1000)/Math.LN2);
 
-//=============================================================
+}//END radiusToZoom()
+
+
+//==========================================================================
+//=========================== radiusToMeters() =============================
 
 //Converts miles to meters for radius
 function radiusToMeters(radius)
-{
-
-console.log("hello3");//TEST CODE REMOVE
-	
+{	
 	return parseInt((radius * 1000)/.62);
-}
 
-//====================================================================
+}//END radiusToMeters()
+
+
+//==========================================================================
+//============================== revGeoCode() ==============================
 
 //Used Google API geocode to return a zip code from latitue and longitude.
 function revGeoCode(latitude, longitude)
-{
-
-console.log("hello6");//TEST CODE REMOVE
-	
+{	
 	const GOOGLE_GEOCODE_ENDPOINT = "https://maps.googleapis.com/maps/api/geocode/json?latlng=";
 	
 	
 	//corrdinates string used in endpoint from latitude and longitude
 	var coordinates = latitude + "," + longitude;
-
-console.log(coordinates);//TEST CODE REMOVE
 
 	//REVERSE GEOCODE LOOK UP 
 	var geocodeUrl = GOOGLE_GEOCODE_ENDPOINT + coordinates + "&result_type=postal_code" + GOOGLE_API_KEY;
@@ -269,24 +260,19 @@ console.log(coordinates);//TEST CODE REMOVE
 
 		//Populates 'location' input box with golocation zip code 
 		$("#locationInput").val(zipCode);	
-
-console.log(zipCode);//TEST CODE REMOVE				
 	
 	});//END ajax geocodeUrl
 		
 }// END revGeoCode()
 
-//=============================================================================
 
+//==========================================================================
+//============================= addMarkers() ===============================
 
-
-//
-function addMarker(yelpResults, searchTerm)
-{
-	console.log("hello1");//TEST CODE REMOVE	
-
+//Add Markers for first three 'results' in yelpResults array.
+function addMarkers(yelpResults, searchTerm)
+{	
 	var icons = ["assets/images/Ribbon_1.png","assets/images/Ribbon_2.png","assets/images/Ribbon_3.png"];
-
 
 	for (var i = 0; i < 3; i++)
 	{
@@ -344,9 +330,10 @@ function addMarker(yelpResults, searchTerm)
 }//END addMarker()
 
 
-//==================================================================================
+//==========================================================================
+//============================= deleteMarkers() ============================
    
-// Deletes all markers in the array by removing references to them.
+// Deletes all markers in the array from map by removing references to them.
 function deleteMarkers() 
 {
 	for (var i = 0; i < markersArray.length; i++)
@@ -355,4 +342,5 @@ function deleteMarkers()
 	}
 	markersArray = [];
 }//END deleteMarkers()
-//=================================== THE END =======================================
+
+//=================================== THE END ==============================

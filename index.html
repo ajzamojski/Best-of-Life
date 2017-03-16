@@ -20,8 +20,8 @@
 
 	<br>
 	<div class="container">
-<!-- 		 <h2 id="modal">Modal Example</h2> -->
-		  <!-- Trigger the modal with a button -->
+
+		<!-- Trigger the modal with a button -->
 		<div class="dropdown">
 			  <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true"> <span class="glyphicon glyphicon-menu-hamburger"></span>
 			    Info
@@ -131,6 +131,26 @@
 			</div>
 		</div>
 
+		<!-- Modal-dialog to alert user if either input is empty -->	
+		<div class="modal fade" id="emptyInput" role="dialog">
+			<div class="modal-dialog">
+			<!-- Modal content-->
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal">&times;</button>
+						<h4 class="modal-title">OOPS! You Missed Something.</h4>
+					</div>
+					<div class="modal-body">
+						<p>Please Enter A <span id="span-input"></span>.</p>
+						
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
 	</div>
 	<br>
 	<div class="container" id="title">
@@ -146,7 +166,7 @@
 				<input class="form-control" placeholder="Enter Topic" id="searchInput" type="text">
 			</div>
 			<div class="col-xs-12 col-md-4">
-				<label for="search-input">Location</label>
+				<label for="search-input">Location:</label>
 				<input class="form-control" placeholder="EX: New York, NY" id="locationInput" type="text">
 			</div>
 			<div class="col-xs-12 col-md-3">
