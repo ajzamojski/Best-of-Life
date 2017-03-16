@@ -21,6 +21,9 @@ var markersArray=[];
 //
 $(document).ready(function()
 {	
+	//Show 'instructions/welcome' module when page first loads.
+	$("#instructionsModal").modal();
+
 	//prevent unwanted characters from being entered in 'Search Topic' input box
 	 $(function () 
 	 {
