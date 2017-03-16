@@ -149,43 +149,56 @@ function runGoogleQuery (searchTerm, location, radius)
 //============================== queryYelp =================================
 //==========================================================================
 
-	/*Yelp search query is sorted by 'rating' in which "The rating sort is not strictly sorted by 
-	the rating value, but by an adjusted rating value that takes into account the number of 
-	ratings, similar to a bayesian average. This is so a business with 1 rating of 5 stars 
-	doesn’t immediately jump to the top.". 
-	*/
-	function queryYelp(searchTerm, location, radius)
-	{					
-		const YELP_HEROKU_ENDPOINT = "https://floating-fortress-53764.herokuapp.com/"
+/*Yelp search query is sorted by 'rating' in which "The rating sort is not strictly sorted by 
+the rating value, but by an adjusted rating value that takes into account the number of 
+ratings, similar to a bayesian average. This is so a business with 1 rating of 5 stars 
+doesn’t immediately jump to the top.". 
+*/
+function queryYelp(searchTerm, location, radius)
+{					
+	const YELP_HEROKU_ENDPOINT = "https://floating-fortress-53764.herokuapp.com/"
 
-		var queryURL = YELP_HEROKU_ENDPOINT + "?term=" + searchTerm.replace(/\s/g, "+") +
-					   "&location="+ location.replace(/\s/g, "+") + "&radius="+ radius;
+	var queryURL = YELP_HEROKU_ENDPOINT + "?term=" + searchTerm.replace(/\s/g, "+") +
+				   "&location="+ location.replace(/\s/g, "+") + "&radius="+ radius;
 
-		$.ajax({
-		      url: queryURL,
-		      method: "GET"
-	    }).done(function(response) {
+	$.ajax({
+	      url: queryURL,
+	      method: "GET"
+    }).done(function(response) {
 
-	    	//Array of all busnisesses from Yelp query
-	    	var yelpResults = JSON.parse(response).businesses;
+    	//Array of all businesess from Yelp query
+    	var yelpBusinesses = JSON.parse(response).businesses;
 
-	    	if (yelpResults[0] === undefined)
-	    	{	    		
-	    		$("#span-searchTerm").html(searchTerm);
-	    		$("#noResults").modal();
-	    		$("#searchInput").val("");
-	    		return;
-	    	}
- 	
-	    	addMarkers(yelpResults, searchTerm);
+    	//Array of businesess within correct radius
+    	var yelpResults = [];	
 
-	    }).error (function()
-	    {
-			$("#span-query").html("Yelp");
-            $("#query-failed").modal();;
-    	});
+    	//If yelp returns no results, notify user via modal
+    	if (yelpBusinesses[0] === undefined)
+    	{	    		
+    		$("#span-searchTerm").html(searchTerm);
+    		$("#noResults").modal();
+    		$("#searchInput").val("");
+    		return;
+    	}
 	
-	}//END queryYelp()
+		//Gets only businesses within radius.
+    	yelpBusinesses.forEach(function(element)
+    	{
+    		if (element.distance <= radius)
+    		{
+    			yelpResults.push(element);
+    		}	
+    	});
+
+    	addMarkers(yelpResults, searchTerm);
+
+    }).error (function()
+    {
+		$("#span-query").html("Yelp");
+        $("#query-failed").modal();;
+	});
+
+}//END queryYelp()
 
 
 //==========================================================================
