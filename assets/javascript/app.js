@@ -107,7 +107,10 @@ $(document).ready(function()
 // when the map is drawn.
 function runGoogleQuery (searchTerm, location, radius) 
 {		
-	var addressRequest = "https://maps.googleapis.com/maps/api/geocode/json?address=" + location + "&key=" + GOOGLE_API_KEY;
+
+	var addressRequest = "https://maps.googleapis.com/maps/api/geocode/json?address=" + 
+						  location.replace(/\s/g, "+") + "&key=" + GOOGLE_API_KEY;
+
 	$.ajax({
 		url: addressRequest,
 		method: "GET"
@@ -147,8 +150,9 @@ function runGoogleQuery (searchTerm, location, radius)
 	{					
 		const YELP_HEROKU_ENDPOINT = "https://floating-fortress-53764.herokuapp.com/"
 
-		var queryURL = YELP_HEROKU_ENDPOINT + "?term=" + searchTerm + "&location="+ location + "&radius="+ radius;
-	
+		var queryURL = YELP_HEROKU_ENDPOINT + "?term=" + searchTerm.replace(/\s/g, "+") +
+					   "&location="+ location.replace(/\s/g, "+") + "&radius="+ radius;
+
 		$.ajax({
 		      url: queryURL,
 		      method: "GET"
