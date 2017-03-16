@@ -184,7 +184,7 @@ console.log("hello5");//TEST CODE REMOVE
 	
 	var uluru = {lat: latitude, lng: longitude};
 	
-	var zoom = radiusToZoom(radius);
+	var zoom = radiusToZoom(radius * 2);
 
 	map = new google.maps.Map(document.getElementById('googleMap'),
 	{
