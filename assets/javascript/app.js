@@ -1,8 +1,8 @@
 
 
 /*==============================================================================
-================================ Variables ====================================
-===============================================================================*/
+================================ Variables =====================================
+================================================================================*/
 
 //Constant containing Google API key.
 const GOOGLE_API_KEY = "&key=AIzaSyDr-DLJtSliHGOsZhoI76ETn6jsk8kVYGo";
@@ -15,8 +15,8 @@ var markersArray=[];
 
 
 /*==============================================================================
-================================ Functions ====================================
-===============================================================================*/
+================================ Functions =====================================
+================================================================================*/
 
 //
 $(document).ready(function()
@@ -103,9 +103,10 @@ $(document).ready(function()
 
 //==========================================================================
 //=========================== runGoogleQuery ===============================
+//==========================================================================
 
-// runGooglequery is called to get the location of the city entered and use its coordinate as a center point 
-// when the map is drawn.
+// runGooglequery is called to get the location of the city entered and use its
+// coordinate as a center point when the map is drawn.
 function runGoogleQuery (searchTerm, location, radius) 
 {		
 
@@ -134,14 +135,20 @@ function runGoogleQuery (searchTerm, location, radius)
 		drawMap(cityLatitude, cityLongitude, radius); 
 	
 		queryYelp(searchTerm, location, radius);
-	});
+	
+	}).error (function()
+	{
+			$("#span-query").html("Google");
+            $("#query-failed").modal();;
+    });
 
 }//END runGoogleQuery
 
 
 //==========================================================================
 //============================== queryYelp =================================
-	
+//==========================================================================
+
 	/*Yelp search query is sorted by 'rating' in which "The rating sort is not strictly sorted by 
 	the rating value, but by an adjusted rating value that takes into account the number of 
 	ratings, similar to a bayesian average. This is so a business with 1 rating of 5 stars 
@@ -172,12 +179,18 @@ function runGoogleQuery (searchTerm, location, radius)
  	
 	    	addMarkers(yelpResults, searchTerm);
 
-	    });
+	    }).error (function()
+	    {
+			$("#span-query").html("Yelp");
+            $("#query-failed").modal();;
+    	});
+	
 	}//END queryYelp()
 
 
 //==========================================================================
 //============================== drawMap() =================================
+//==========================================================================
 
 // Use Google Maps API to display a map of given parameters.
 function drawMap(latitude, longitude, radius) 
@@ -199,6 +212,7 @@ function drawMap(latitude, longitude, radius)
 
 //==========================================================================
 //============================== initMap() =================================
+//==========================================================================
 
 //When page first loads this is called via <script> tag in html.
 //If geolocation is detected, revGeoCode() populates 'location' input 
@@ -220,6 +234,7 @@ function initMap()
 
 //==========================================================================
 //=========================== radiusToZoom() ===============================
+//==========================================================================
 
 //Converts radius in meters to appropriate zoom #
 function radiusToZoom(radius)
@@ -231,6 +246,7 @@ function radiusToZoom(radius)
 
 //==========================================================================
 //=========================== radiusToMeters() =============================
+//==========================================================================
 
 //Converts miles to meters for radius
 function radiusToMeters(radius)
@@ -242,12 +258,12 @@ function radiusToMeters(radius)
 
 //==========================================================================
 //============================== revGeoCode() ==============================
+//==========================================================================
 
 //Used Google API geocode to return a zip code from latitue and longitude.
 function revGeoCode(latitude, longitude)
 {	
 	const GOOGLE_GEOCODE_ENDPOINT = "https://maps.googleapis.com/maps/api/geocode/json?latlng=";
-	
 	
 	//corrdinates string used in endpoint from latitude and longitude
 	var coordinates = latitude + "," + longitude;
@@ -268,13 +284,18 @@ function revGeoCode(latitude, longitude)
 		//Populates 'location' input box with golocation zip code 
 		$("#locationInput").val(zipCode);	
 	
-	});//END ajax geocodeUrl
+	}).error (function()
+	{
+			$("#span-query").html("Google");
+            $("#query-failed").modal();;
+    });//END ajax geocodeUrl
 		
 }// END revGeoCode()
 
 
 //==========================================================================
 //============================= addMarkers() ===============================
+//==========================================================================
 
 //Add Markers for first three 'results' in yelpResults array.
 function addMarkers(yelpResults, searchTerm)
@@ -339,6 +360,7 @@ function addMarkers(yelpResults, searchTerm)
 
 //==========================================================================
 //============================= deleteMarkers() ============================
+//==========================================================================
    
 // Deletes all markers in the array from map by removing references to them.
 function deleteMarkers() 
@@ -347,7 +369,11 @@ function deleteMarkers()
 	{
 	  markersArray[i].setMap(null);
 	}
+	
 	markersArray = [];
+
 }//END deleteMarkers()
 
-//=================================== THE END ==============================
+//==========================================================================
+//================================ THE END =================================
+//==========================================================================
