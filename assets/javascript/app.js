@@ -175,9 +175,10 @@ function queryYelp(searchTerm, location, radius)
     	//If yelp returns no results, notify user via modal
     	if (yelpBusinesses[0] === undefined)
     	{	    		
-    		$("#span-searchTerm").html(searchTerm);
+    		$("#span-searchTerm").html(searchTerm);  
+    		$("#span-location").html(location);
     		$("#noResults").modal();
-    		$("#searchInput").val("");
+  
     		return;
     	}
 	
