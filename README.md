@@ -100,10 +100,9 @@ function queryYelp(searchTerm, location, radius)
 }//END queryYelp()
 
 ## Authors
+Contributors:
 
-* **John Doe** - *Initial work* - [John Doe](https://github.com)
-
-See also the list of [contributors](https://github.com/your/project/contributors) who participated in this project.
+Doug Aquilino, Ibad Aslam, Bobby Frazette, Kevin Smart-Abbey, & Adam Zamojski
 
 ## License
 
