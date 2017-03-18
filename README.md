@@ -47,13 +47,57 @@ For Project presentation, you can include snippets of code you found buggy, inte
 
 You can also show where you've used technologies you've learned and applied here.
 
-```
-function awesomeThing() {
-    //...
-    // try not to make it too long otherwise, point to filepaths:line numbers
-    //...
-}
-```
+/*Yelp search query is sorted by 'rating' in which "The rating sort is not strictly sorted by 
+the rating value, but by an adjusted rating value that takes into account the number of 
+ratings, similar to a bayesian average. This is so a business with 1 rating of 5 stars 
+doesn’t immediately jump to the top.". 
+*/
+function queryYelp(searchTerm, location, radius)
+{					
+	const YELP_HEROKU_ENDPOINT = "https://floating-fortress-53764.herokuapp.com/"
+
+	var queryURL = YELP_HEROKU_ENDPOINT + "?term=" + searchTerm.replace(/\s/g, "+") +
+				   "&location="+ location.replace(/\s/g, "+") + "&radius="+ radius;
+
+	$.ajax({
+	      url: queryURL,
+	      method: "GET"
+    }).done(function(response) {
+
+    	//Array of all businesess from Yelp query
+    	var yelpBusinesses = JSON.parse(response).businesses;
+
+    	//Array of businesess within correct radius
+    	var yelpResults = [];	
+
+    	//If yelp returns no results, notify user via modal
+    	if (yelpBusinesses[0] === undefined)
+    	{	    		
+    		$("#span-searchTerm").html(searchTerm);  
+    		$("#span-location").html(location);
+    		$("#noResults").modal();
+  
+    		return;
+    	}
+	
+		//Gets only businesses within radius.
+    	yelpBusinesses.forEach(function(element)
+    	{
+    		if (element.distance <= radius)
+    		{
+    			yelpResults.push(element);
+    		}	
+    	});
+
+    	addMarkers(yelpResults, searchTerm);
+
+    }).error (function()
+    {
+		$("#span-query").html("Yelp");
+        $("#query-failed").modal();;
+	});
+
+}//END queryYelp()
 
 ## Authors
 
