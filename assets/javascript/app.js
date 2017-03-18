@@ -18,7 +18,10 @@ var markersArray=[];
 ================================ Functions =====================================
 ================================================================================*/
 
-//
+//This is where all the magic happens.  After the document is loaded.  jQuery is used to display
+// the 'welcome' modal.  Keydown event handlers prevent the user from entering unwanted characters
+// as input. Click event handlers monitor if the info dropdown is clicked.  When the user enters 
+// data and clicks 'search' the data is validated then the data is sent to the runGoogleQuery funcion.
 $(document).ready(function()
 {	
 	//Show 'instructions/welcome' modal when page first loads.
@@ -178,7 +181,6 @@ function queryYelp(searchTerm, location, radius)
     		$("#span-searchTerm").html(searchTerm);  
     		$("#span-location").html(location);
     		$("#noResults").modal();
-  
     		return;
     	}
 	
