@@ -27,8 +27,8 @@ You can give a brief listing of the technologies you've learned and applied here
 - Google Maps API
 
 ## Getting Started
-Clone this out projcet githup repo at https://github.com/ajzamojski/Project-1.
-Visit deployed site at https://calm-stream-84659.herokuapp.com/#
+- Clone this out projcet githup repo at https://github.com/ajzamojski/Project-1.
+- Visit deployed site at https://calm-stream-84659.herokuapp.com/#
 
 ### Prerequisities
 
