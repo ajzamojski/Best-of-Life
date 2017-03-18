@@ -8,13 +8,7 @@ The "Best of Life" is a tool anyone can use to find the "Best of" a search topic
 
 ## Technologies used
 You can give a brief listing of the technologies you've learned and applied here
-- HTML 
-- CSS 
-- jQuery 
-- ajax 
-- javascript 
-- php 
-- bootstrap 
+
 - google fonts 
 - trello 
 - coverr 
@@ -36,21 +30,18 @@ You can give a brief listing of the technologies you've learned and applied here
 
 Internet connection, web browser.
 
-## Running the tests
 
-Explain how to run the automated tests for this system (if applicable)
-
-```
-jasmine
-
-jasmine spec/appSpec.js
-```
 
 ## Built With
 
-* Atom - Sublime Text is pretty cool too I guess
-* Balsamiq - Wireframe of choice 
-* RoboMongo - Because .pretty() everything is tedious
+* Sublime Text
+* HTML 
+* CSS 
+* jQuery 
+* ajax 
+* javascript 
+* php 
+* bootstrap 
 
 ## Walk throughs of code
 For Project presentation, you can include snippets of code you found buggy, interesting, or are overall proud of here.  Try to limit the quantity and size to quick readable bits.
@@ -75,8 +66,3 @@ See also the list of [contributors](https://github.com/your/project/contributors
 
 This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
 
-## Acknowledgments
-
-* Hat tip to anyone who's code was used
-* Inspiration
-* etc
