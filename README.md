@@ -3,7 +3,8 @@
 The "Best of Life" is a tool anyone can use to find the "Best of" a search topic within a radius of a given location.
 
 ## Screenshots
-Include a one or two screenshots of main UI/UX points of your app and how it solves a problem
+![screenshot1](screenshot1.png)
+![screenshot2](screenshot2.png)
 
 ## Technologies used
 You can give a brief listing of the technologies you've learned and applied here
