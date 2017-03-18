@@ -14,7 +14,6 @@ You can give a brief listing of the technologies you've learned and applied here
 - coverr 
 - slack 
 - github 
-- sublime 
 - heroku 
 - powerpoint 
 - Yelp Fusion API 
