@@ -149,6 +149,8 @@ function runGoogleQuery (searchTerm, location, radius)
 	
 	}).error (function()
 	{
+		    	console.log("Google query fortress failed");
+
 			$("#span-query").html("Google");
             $("#query-failed").modal();;
     });
@@ -167,7 +169,7 @@ doesn’t immediately jump to the top.".
 */
 function queryYelp(searchTerm, location, radius)
 {					
-	const YELP_HEROKU_ENDPOINT = "https://floating-fortress-53764.herokuapp.com/"
+	const YELP_HEROKU_ENDPOINT = "https://guarded-sands-87573.herokuapp.com/"
 
 	var queryURL = YELP_HEROKU_ENDPOINT + "?term=" + searchTerm.replace(/\s/g, "+") +
 				   "&location="+ location.replace(/\s/g, "+") + "&radius="+ radius;
@@ -176,10 +178,18 @@ function queryYelp(searchTerm, location, radius)
 	      url: queryURL,
 	      method: "GET"
     }).done(function(response) {
+    	console.log(typeof response);
+    	// console.log("the reutrned response: " + response);
+
+    	var yelpBusinesses0 = response.split('\n');
+    	yelpBusinesses0.splice(0,1);
+
+    	var yelpBusinesses1 = yelpBusinesses0.join('\n');
+    	    	console.log(yelpBusinesses1);
+
 
     	//Array of all businesess from Yelp query
-    	var yelpBusinesses = JSON.parse(response).businesses;
-
+    	var yelpBusinesses = JSON.parse(yelpBusinesses1).businesses;
     	//Array of businesess within correct radius
     	var yelpResults = [];	
 
@@ -206,6 +216,7 @@ function queryYelp(searchTerm, location, radius)
 
     }).error (function()
     {
+    	console.log("Floating fortress failed");
 		$("#span-query").html("Yelp");
         $("#query-failed").modal();;
 	});
