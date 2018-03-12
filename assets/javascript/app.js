@@ -16,7 +16,7 @@
 ================================================================================*/
 
 //Constant containing Google API key.
-const GOOGLE_API_KEY = "&key=AIzaSyDr-DLJtSliHGOsZhoI76ETn6jsk8kVYGo";
+const GOOGLE_API_KEY = "&key=AIzaSyAn2YjC2lYtzXziNESv3oh2g2ii3yG_12o";
 
 //This is the map on the page.
 var map; 
@@ -29,10 +29,7 @@ var markersArray=[];
 ================================ Functions =====================================
 ================================================================================*/
 
-//This is where all the magic happens.  After the document is loaded.  jQuery is used to display
-// the 'welcome' modal.  Keydown event handlers prevent the user from entering unwanted characters
-// as input. Click event handlers monitor if the info dropdown is clicked.  When the user enters 
-// data and clicks 'search' the data is validated then the data is sent to the runGoogleQuery function.
+//
 $(document).ready(function()
 {	
 	//Show 'instructions/welcome' modal when page first loads.
@@ -133,6 +130,7 @@ function runGoogleQuery (searchTerm, location, radius)
 
 	}).done (function(response)
 	{
+		console.log(response);
 
 		if (response.status === "ZERO_RESULTS") 
 		{
@@ -152,6 +150,8 @@ function runGoogleQuery (searchTerm, location, radius)
 	
 	}).error (function()
 	{
+		    	console.log("Google query fortress failed");
+
 			$("#span-query").html("Google");
             $("#query-failed").modal();;
     });
@@ -170,7 +170,7 @@ doesn’t immediately jump to the top.".
 */
 function queryYelp(searchTerm, location, radius)
 {					
-	const YELP_HEROKU_ENDPOINT = "https://floating-fortress-53764.herokuapp.com/"
+	const YELP_HEROKU_ENDPOINT = "https://guarded-sands-87573.herokuapp.com/"
 
 	var queryURL = YELP_HEROKU_ENDPOINT + "?term=" + searchTerm.replace(/\s/g, "+") +
 				   "&location="+ location.replace(/\s/g, "+") + "&radius="+ radius;
@@ -180,9 +180,13 @@ function queryYelp(searchTerm, location, radius)
 	      method: "GET"
     }).done(function(response) {
 
+    	var yelpBusinesses0 = response.split('\n');
+    	yelpBusinesses0.splice(0,1);
+
+    	response = yelpBusinesses0.join('\n');
+
     	//Array of all businesess from Yelp query
     	var yelpBusinesses = JSON.parse(response).businesses;
-
     	//Array of businesess within correct radius
     	var yelpResults = [];	
 
@@ -192,6 +196,7 @@ function queryYelp(searchTerm, location, radius)
     		$("#span-searchTerm").html(searchTerm);  
     		$("#span-location").html(location);
     		$("#noResults").modal();
+  
     		return;
     	}
 	
@@ -208,6 +213,7 @@ function queryYelp(searchTerm, location, radius)
 
     }).error (function()
     {
+    	console.log("Floating fortress failed");
 		$("#span-query").html("Yelp");
         $("#query-failed").modal();;
 	});
