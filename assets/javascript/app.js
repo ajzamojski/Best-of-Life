@@ -178,15 +178,11 @@ function queryYelp(searchTerm, location, radius)
 	      url: queryURL,
 	      method: "GET"
     }).done(function(response) {
-    	console.log(typeof response);
-    	// console.log("the reutrned response: " + response);
 
     	var yelpBusinesses0 = response.split('\n');
     	yelpBusinesses0.splice(0,1);
 
     	var yelpBusinesses1 = yelpBusinesses0.join('\n');
-    	    	console.log(yelpBusinesses1);
-
 
     	//Array of all businesess from Yelp query
     	var yelpBusinesses = JSON.parse(yelpBusinesses1).businesses;
