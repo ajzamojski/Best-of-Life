@@ -16,7 +16,7 @@
 ================================================================================*/
 
 //Constant containing Google API key.
-const GOOGLE_API_KEY = "&key=AIzaSyDr-DLJtSliHGOsZhoI76ETn6jsk8kVYGo";
+const GOOGLE_API_KEY = "&key=AIzaSyAn2YjC2lYtzXziNESv3oh2g2ii3yG_12o";
 
 //This is the map on the page.
 var map; 
@@ -130,6 +130,7 @@ function runGoogleQuery (searchTerm, location, radius)
 
 	}).done (function(response)
 	{
+		console.log(response);
 
 		if (response.status === "ZERO_RESULTS") 
 		{
@@ -182,10 +183,10 @@ function queryYelp(searchTerm, location, radius)
     	var yelpBusinesses0 = response.split('\n');
     	yelpBusinesses0.splice(0,1);
 
-    	var yelpBusinesses1 = yelpBusinesses0.join('\n');
+    	response = yelpBusinesses0.join('\n');
 
     	//Array of all businesess from Yelp query
-    	var yelpBusinesses = JSON.parse(yelpBusinesses1).businesses;
+    	var yelpBusinesses = JSON.parse(response).businesses;
     	//Array of businesess within correct radius
     	var yelpResults = [];	
 
