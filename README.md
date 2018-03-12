@@ -21,9 +21,7 @@ You can give a brief listing of the technologies you've learned and applied here
 
 ## Getting Started
 
-- Visit deployed site at https://calm-stream-84659.herokuapp.com/#
-
-- If you want to see out code clone this repo at https://github.com/ajzamojski/Project-1.
+- Visit deployed site at https://vast-taiga-98394.herokuapp.com/#
 
 ### Prerequisities
 
